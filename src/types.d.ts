@@ -5,6 +5,14 @@ type stock = {
     quantity: string;
   };
 
+  type product = {
+    name: string;
+  };
+
+  type vendor = {
+    name: string;
+  };
+
  type initialValues = {
     vendor: string;
     product: string;
