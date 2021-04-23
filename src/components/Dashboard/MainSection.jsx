@@ -43,7 +43,7 @@ export default function MainSection() {
                     zIndex: -1,
                   }}
                 >
-                  ALI
+                  Demo
               </Text>
                 <br />{' '}
                 <Text color={'blue.400'} as={'span'}>
