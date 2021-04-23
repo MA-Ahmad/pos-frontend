@@ -50,7 +50,8 @@ const StockModal: React.SFC<StockModalProps> = ({
   const [initialValues, setInitialValues] = React.useState({
     vendor: "",
     product: "",
-    quantity: "1.0"
+    quantity: "1.0",
+    price: "1.0"
   });
   const vendorRef = React.useRef<HTMLInputElement>(null);
   const productRef = React.useRef<HTMLInputElement>(null);
@@ -58,6 +59,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   const [vendor, setVendor] = React.useState("");
   const [product, setProduct] = React.useState("");
   const [quantity, setQuantity] = React.useState("1.0");
+  const [price, setPrice] = React.useState("1.0");
   const [loading, setLoading] = React.useState(true);
   const [vendors, setVendors] = React.useState([]);
   const [products, setProducts] = React.useState([]);
@@ -96,27 +98,27 @@ const StockModal: React.SFC<StockModalProps> = ({
         id: selectedStock.id,
         vendor: selectedStock.vendor.id,
         product: selectedStock.product.id,
-        quantity: selectedStock.quantity
+        quantity: selectedStock.quantity,
+        price: selectedStock.price
       };
       setInitialValues(stock);
       // setVendor(selectedStock.vendor);
       // setProduct(selectedStock.product);
       setQuantity(selectedStock.quantity);
+      setPrice(selectedStock.price);
     } else {
       let stock: stock = {
         id: "",
         vendor: "",
         product: "",
-        quantity: "1.0"
+        quantity: "1.0",
+        price: "1.0"
       };
       setInitialValues(stock);
       setQuantity("1.0");
+      setPrice("1.0");
     }
   }, [isOpen]);
-
-  const handleQuantityChange = value => {
-    setQuantity(value);
-  };
 
   const handleSave = (values: stock) => {
     if (selectedStock) {
@@ -133,7 +135,8 @@ const StockModal: React.SFC<StockModalProps> = ({
         stock: {
           vendor_id: values.vendor,
           product_id: values.product,
-          quantity: quantity
+          quantity: quantity,
+          price: price
         }
       });
       refetch();
@@ -151,7 +154,8 @@ const StockModal: React.SFC<StockModalProps> = ({
         stock: {
           vendor_id: values.vendor,
           product_id: values.product,
-          quantity: quantity
+          quantity: quantity,
+          price: price
         }
       });
       refetch();
@@ -209,7 +213,7 @@ const StockModal: React.SFC<StockModalProps> = ({
             isSubmitting
           }) => (
             <Form>
-              <ModalBody pb={6}>
+              <ModalBody pb={0} pt={0}>
                 {/* <FormControl>
             <FormLabel>Vendor</FormLabel>
             <Select
@@ -224,7 +228,7 @@ const StockModal: React.SFC<StockModalProps> = ({
               ))}
             </Select>
           </FormControl> */}
-                <Stack spacing={4}>
+                <Stack>
                   <Box>
                     <Field name="vendor" width={"100%"}>
                       {({ field, form }) => (
@@ -306,7 +310,26 @@ const StockModal: React.SFC<StockModalProps> = ({
                         defaultValue={quantity}
                         clampValueOnBlur={false}
                         step={0.2}
-                        onChange={value => handleQuantityChange(value)}
+                        onChange={value => setQuantity(value)}
+                      >
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl>
+                      <FormLabel>Price(kg)</FormLabel>
+                      <NumberInput
+                        min={1}
+                        max={5000}
+                        defaultValue={price}
+                        clampValueOnBlur={false}
+                        step={0.2}
+                        onChange={value => setPrice(value)}
                       >
                         <NumberInputField />
                         <NumberInputStepper>
@@ -322,7 +345,6 @@ const StockModal: React.SFC<StockModalProps> = ({
                 <Button
                   isLoading={isSubmitting}
                   colorScheme="blue"
-                  mr={3}
                   type="submit"
                 >
                   {selectedStock ? "Update" : "Create"}

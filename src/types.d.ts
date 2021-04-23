@@ -3,6 +3,7 @@ type stock = {
     vendor: string;
     product: string;
     quantity: string;
+    price: string;
   };
 
   type product = {
