@@ -327,7 +327,6 @@ const StockModal: React.SFC<StockModalProps> = ({
                 >
                   {selectedStock ? "Update" : "Create"}
                 </Button>
-                <Button onClick={onClose}>Cancel</Button>
               </ModalFooter>
             </Form>
           )}
