@@ -86,7 +86,7 @@ const Signup = ({ history }) => {
     } catch (error) {
       // alert(error.response.data.error);
       toast({
-        description: error.response.data.error,
+        description: 'Something went wrong',
         status: 'error',
         duration: 1500,
         isClosable: true,
