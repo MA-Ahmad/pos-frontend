@@ -1,6 +1,5 @@
-import axios from "axios";
+import axios, { baseUrl } from "axios";
 
-const baseUrl = "http://localhost:3001/";
 // const baseUrl = 'https://auth-app-rails-back.herokuapp.com/';
 
 const updatePassword = payload =>

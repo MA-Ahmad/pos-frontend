@@ -1,9 +1,10 @@
-import react from "react";
 import axios from "axios";
-// import { Toastr } from "neetoui";
 import { useToast } from "@chakra-ui/react";
 
 axios.defaults.baseURL = "/";
+
+export const baseUrl = "https://pos-backend-rails.herokuapp.com/";
+// export const baseUrl = "http://localhost:3001/";
 
 export const setAuthHeaders = (setLoading = () => null) => {
   axios.defaults.headers = {
