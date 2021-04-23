@@ -318,7 +318,7 @@ export default function Stocks() {
                     <Td>{stock.product ? stock.product.name : ""}</Td>
                     <Td>{stock.quantity}</Td>
                     <Td>{stock.price}</Td>
-                    <Td>{stock.price * stock.quantity}</Td>
+                    <Td>{(stock.price * stock.quantity).toFixed(2)}</Td>
                     <Td width="10px">
                       <HStack spacing={3}>
                         <Tooltip
