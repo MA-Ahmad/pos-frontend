@@ -50,14 +50,14 @@ const AccountEdit = ({ history }) => {
       });
       history.push('/');
       toast({
-        description: notice,
+        description: 'Password has been successfully updated',
         status: 'success',
         duration: 1500,
         isClosable: true,
       });
     } catch (error) {
       toast({
-        description: error.response.data.error,
+        description: 'Something went wrong',
         status: 'error',
         duration: 1500,
         isClosable: true,

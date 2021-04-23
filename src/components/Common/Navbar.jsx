@@ -124,7 +124,7 @@ const Navbar = () => {
               >
                 <Avatar size={"sm"} name={contact} />
               </MenuButton>
-              <MenuList fontSize={17}>
+              <MenuList fontSize={17} zIndex={5555}>
                 <MenuItem as={Link} to="/profile">
                   My profile
                 </MenuItem>
