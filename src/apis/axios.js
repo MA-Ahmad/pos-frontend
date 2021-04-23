@@ -5,6 +5,7 @@ axios.defaults.baseURL = "/";
 
 export const baseUrl = "https://pos-backend-rails.herokuapp.com/";
 // export const baseUrl = "http://localhost:3001/";
+// export const baseUrl = 'https://auth-app-rails-back.herokuapp.com/';
 
 export const setAuthHeaders = (setLoading = () => null) => {
   axios.defaults.headers = {
