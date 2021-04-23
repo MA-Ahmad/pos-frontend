@@ -4,7 +4,7 @@ const PageLoader = () => {
   return (
     <Flex
       position="fixed"
-      left={0}
+      left={'35vh'}
       right={0}
       bottom={0}
       top={0}

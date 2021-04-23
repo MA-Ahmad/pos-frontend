@@ -28,8 +28,6 @@ import { AddIcon, DeleteIcon, Search2Icon } from "@chakra-ui/icons";
 import StockModal from "./stock-modal";
 import { PageSlideFade } from "../../../animations/page-transitions";
 import { FiEdit, FiDelete } from "react-icons/fi";
-import PageLoader from "../../Common/PageLoader";
-import stocksApi from "../../../apis/stocks";
 
 const stocks = [
   {
@@ -60,43 +58,22 @@ const stocks = [
 
 export default function Stocks() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [loading, setLoading] = React.useState(true);
-  const [stockList, setStockList] = React.useState([]);
+  const [stockList, setStockList] = React.useState<stock[]>([]);
   const [selectedStock, setSelectedStock] = React.useState<stock>(null);
   const bg = useColorModeValue("#f9f7f5", "gray.700");
   const toast = useToast();
 
-  const [checkedStockIds, setCheckedStockIds] = React.useState([]);
   const [checkedItems, setCheckedItems] = React.useState([]);
   const allChecked = checkedItems.every(Boolean);
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
   const someChecked = checkedItems.some(Boolean);
 
   React.useEffect(() => {
-    fetchStocks();
+    let checkedList = [];
+    stocks.map(stock => checkedList.push(false));
+    setCheckedItems(checkedList);
+    setStockList(stocks);
   }, []);
-
-  const fetchStocks = async () => {
-    try {
-      setLoading(true);
-      const response = await stocksApi.fetch();
-      let checkedList = [];
-      response.data.map(stock => checkedList.push(false));
-      setCheckedItems(checkedList);
-      setStockList(response.data);
-    } catch (error) {
-      //   logger.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  //   React.useEffect(() => {
-  //     let checkedList = [];
-  //     stocks.map(stock => checkedList.push(false));
-  //     setCheckedItems(checkedList);
-  //     setStockList(stocks);
-  //   }, []);
 
   const handleStockCreate = (stock: stock) => {
     const newStocksState: stock[] = [...stockList];
@@ -152,25 +129,12 @@ export default function Stocks() {
     setCheckedItems(checkedArray);
   };
 
-  //   const handleDelete = (id: string) => {
-  //     const newStockList: stock[] = stockList.filter(
-  //       (stock: stock) => stock.id !== id
-  //     );
-  //     setStockList(newStockList);
-  //     showToast("Stock deleted successfully");
-  //   };
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      const response = await stocksApi.destroy({ ids: checkedStockIds });
-      onClose();
-      fetchStocks();
-      showToast(response.data.notice);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+  const handleDelete = (id: string) => {
+    const newStockList: stock[] = stockList.filter(
+      (stock: stock) => stock.id !== id
+    );
+    setStockList(newStockList);
+    showToast("Stock deleted successfully");
   };
 
   const handleMultipleDelete = () => {
@@ -190,10 +154,6 @@ export default function Stocks() {
     }
     showToast("Selected stock deleted successfully");
   };
-
-  if (loading) {
-    return <PageLoader />;
-  }
 
   return (
     <PageSlideFade>
@@ -236,52 +196,31 @@ export default function Stocks() {
             boxShadow="lg"
             size="sm"
             _hover={{ boxShadow: "none" }}
-            onClick={() => handleDelete()}
-            // isDisabled={!someChecked}
-            isDisabled={!checkedStockIds.length}
+            onClick={() => handleMultipleDelete()}
+            isDisabled={!someChecked}
           >
             Delete
           </Button>
         </HStack>
         <Divider />
         <Box p={5}>
-          <Box
-            border="1px"
-            borderColor="gray.200"
-            rounded="md"
-            maxHeight={"71vh"}
-            overflowY="scroll"
-          >
+          <Box border="1px" borderColor="gray.200" rounded="md">
             <Table variant="simple">
-              {/* <TableCaption mt={0} placement="top">
+              <TableCaption mt={0}>
                 <Heading fontSize={"md"}>Stock Data</Heading>
-              </TableCaption> */}
+              </TableCaption>
               <Thead>
                 <Tr>
                   <Th width="10px">
                     <Checkbox
-                      //   isChecked={allChecked}
-                      //   isIndeterminate={isIndeterminate}
-                      //   onChange={e => handleParentCheck()}
-                      isChecked={
-                        checkedStockIds.length ===
-                        stockList.map(stock => stock.id).length
-                      }
-                      onChange={() => {
-                        const stockIds = stockList.map(stock => stock.id);
-                        if (checkedStockIds.length === stockIds.length) {
-                          setCheckedStockIds([]);
-                        } else {
-                          setCheckedStockIds(stockIds);
-                        }
-                      }}
+                      isChecked={allChecked}
+                      isIndeterminate={isIndeterminate}
+                      onChange={e => handleParentCheck()}
                     ></Checkbox>
                   </Th>
                   <Th>Vendor</Th>
                   <Th>Product</Th>
                   <Th>Quantity(kg)</Th>
-                  <Th>Price(per kg)</Th>
-                  <Th>Total</Th>
                   <Th width="10px"></Th>
                 </Tr>
               </Thead>
@@ -292,33 +231,16 @@ export default function Stocks() {
                     _hover={{ bg: bg }}
                     _groupHover={{ bg: bg }}
                     cursor="pointer"
-                    // onClick={() => handleClick(stock.id)}
                   >
                     <Td width="10px">
                       <Checkbox
-                        // isChecked={checkedItems[index]}
-                        // onChange={e => handleChildCheck(index)}
-                        isChecked={checkedStockIds.includes(stock.id)}
-                        onChange={event => {
-                          event.stopPropagation();
-                          const index = checkedStockIds.indexOf(stock.id);
-
-                          if (index > -1) {
-                            setCheckedStockIds([
-                              ...checkedStockIds.slice(0, index),
-                              ...checkedStockIds.slice(index + 1)
-                            ]);
-                          } else {
-                            setCheckedStockIds([...checkedStockIds, stock.id]);
-                          }
-                        }}
+                        isChecked={checkedItems[index]}
+                        onChange={e => handleChildCheck(index)}
                       ></Checkbox>
                     </Td>
-                    <Td>{stock.vendor ? stock.vendor.name : ""}</Td>
-                    <Td>{stock.product ? stock.product.name : ""}</Td>
+                    <Td>{stock.vendor}</Td>
+                    <Td>{stock.product}</Td>
                     <Td>{stock.quantity}</Td>
-                    <Td>{stock.price}</Td>
-                    <Td>{stock.price * stock.quantity}</Td>
                     <Td width="10px">
                       <HStack spacing={3}>
                         <Tooltip
@@ -332,12 +254,13 @@ export default function Stocks() {
                             variant="outline"
                             colorScheme="messenger"
                             aria-label="stocks"
+                            // fontSize="20px"
                             size="sm"
                             icon={<FiEdit />}
                             onClick={() => handleClick(stock.id)}
                           />
                         </Tooltip>
-                        {/* <Tooltip
+                        <Tooltip
                           label="Delete"
                           fontSize="md"
                           placement="top"
@@ -352,7 +275,7 @@ export default function Stocks() {
                             icon={<FiDelete />}
                             onClick={() => handleDelete(stock.id)}
                           />
-                        </Tooltip> */}
+                        </Tooltip>
                       </HStack>
                     </Td>
                   </Tr>
@@ -375,7 +298,6 @@ export default function Stocks() {
         selectedStock={selectedStock}
         handleStockCreate={handleStockCreate}
         handleStockUpdate={handleStockUpdate}
-        refetch={fetchStocks}
       />
     </PageSlideFade>
   );

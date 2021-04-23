@@ -20,11 +20,15 @@ import {
   NumberDecrementStepper,
   FormErrorMessage,
   Box,
-  Stack
+  Stack,
+  useToast
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { products, vendors } from "../../../data/stocks-data";
+import vendorsApi from "../../../apis/vendors";
+import productsApi from "../../../apis/products";
+import stocksApi from "../../../apis/stocks";
 
 export interface StockModalProps {
   isOpen: boolean;
@@ -32,6 +36,7 @@ export interface StockModalProps {
   selectedStock?: stock;
   handleStockCreate?: (stock: stock) => void;
   handleStockUpdate?: (stock: stock) => void;
+  refetch: () => void;
 }
 
 const StockModal: React.SFC<StockModalProps> = ({
@@ -39,7 +44,8 @@ const StockModal: React.SFC<StockModalProps> = ({
   onClose,
   selectedStock,
   handleStockCreate,
-  handleStockUpdate
+  handleStockUpdate,
+  refetch
 }) => {
   const [initialValues, setInitialValues] = React.useState({
     vendor: "",
@@ -52,13 +58,44 @@ const StockModal: React.SFC<StockModalProps> = ({
   const [vendor, setVendor] = React.useState("");
   const [product, setProduct] = React.useState("");
   const [quantity, setQuantity] = React.useState("1.0");
+  const [loading, setLoading] = React.useState(true);
+  const [vendors, setVendors] = React.useState([]);
+  const [products, setProducts] = React.useState([]);
+  const toast = useToast();
+
+  const fetchVendors = async () => {
+    try {
+      setLoading(true);
+      const response = await vendorsApi.fetch();
+      setVendors(response.data);
+    } catch (error) {
+      //   logger.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await productsApi.fetch();
+      setProducts(response.data);
+    } catch (error) {
+      //   logger.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   React.useEffect(() => {
+    if (!vendors.length) fetchVendors();
+    if (!products.length) fetchProducts();
+
     if (selectedStock) {
       let stock: stock = {
         id: selectedStock.id,
-        vendor: selectedStock.vendor,
-        product: selectedStock.product,
+        vendor: selectedStock.vendor.id,
+        product: selectedStock.product.id,
         quantity: selectedStock.quantity
       };
       setInitialValues(stock);
@@ -67,65 +104,72 @@ const StockModal: React.SFC<StockModalProps> = ({
       setQuantity(selectedStock.quantity);
     } else {
       let stock: stock = {
-        id: '',
-        vendor: '',
-        product: '',
-        quantity: '1.0'
+        id: "",
+        vendor: "",
+        product: "",
+        quantity: "1.0"
       };
       setInitialValues(stock);
-      // setVendor("");
-      // setProduct("");
       setQuantity("1.0");
     }
   }, [isOpen]);
-
-  const handleVendorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setVendor(event.target.value);
-  };
-
-  const handleStockChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProduct(event.target.value);
-  };
 
   const handleQuantityChange = value => {
     setQuantity(value);
   };
 
-  // const handleSave = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   let newStock: stock = {
-  //     id: "",
-  //     vendor: vendor,
-  //     product: product,
-  //     quantity: quantity
-  //   };
-  //   if (selectedStock) {
-  //     newStock.id = selectedStock ? selectedStock.id : "";
-  //     handleStockUpdate(newStock);
-  //   } else {
-  //     newStock.id = "1";
-  //     handleStockCreate(newStock);
-  //   }
-  //   setVendor("");
-  //   setProduct("");
-  //   setQuantity("");
-  //   onClose();
-  // };
-
   const handleSave = (values: stock) => {
-    let newStock: stock = {
-      id: "",
-      vendor: values.vendor,
-      product: values.product,
-      quantity: quantity
-    };
     if (selectedStock) {
-      newStock.id = selectedStock ? selectedStock.id : "";
-      handleStockUpdate(newStock);
+      updateStock(selectedStock.id, values);
     } else {
-      newStock.id = "1";
-      handleStockCreate(newStock);
+      createStock(values);
     }
     onClose();
+  };
+
+  const createStock = async values => {
+    try {
+      await stocksApi.create({
+        stock: {
+          vendor_id: values.vendor,
+          product_id: values.product,
+          quantity: quantity
+        }
+      });
+      refetch();
+      onClose();
+    } catch (err) {
+      // logger.error(err);
+    } finally {
+      showToast("Stock created successfully");
+    }
+  };
+
+  const updateStock = async (id, values) => {
+    try {
+      await stocksApi.update(id, {
+        stock: {
+          vendor_id: values.vendor,
+          product_id: values.product,
+          quantity: quantity
+        }
+      });
+      refetch();
+      onClose();
+    } catch (err) {
+      // logger.error(err);
+    } finally {
+      showToast("Stock updated successfully");
+    }
+  };
+
+  const showToast = text => {
+    toast({
+      description: text,
+      status: "success",
+      duration: 1500,
+      isClosable: true
+    });
   };
 
   const validationSchema = Yup.object({
@@ -198,8 +242,8 @@ const StockModal: React.SFC<StockModalProps> = ({
                             onChange={handleChange}
                           >
                             {vendors.map(vendor => (
-                              <option value={vendor} key={vendor}>
-                                {vendor}
+                              <option value={vendor.id} key={vendor.id}>
+                                {vendor.name}
                               </option>
                             ))}
                           </Select>
@@ -241,8 +285,8 @@ const StockModal: React.SFC<StockModalProps> = ({
                             onChange={handleChange}
                           >
                             {products.map(product => (
-                              <option value={product} key={product}>
-                                {product}
+                              <option value={product.id} key={product.id}>
+                                {product.name}
                               </option>
                             ))}
                           </Select>
@@ -275,7 +319,12 @@ const StockModal: React.SFC<StockModalProps> = ({
                 </Stack>
               </ModalBody>
               <ModalFooter>
-                <Button colorScheme="blue" mr={3} type="submit">
+                <Button
+                  isLoading={isSubmitting}
+                  colorScheme="blue"
+                  mr={3}
+                  type="submit"
+                >
                   {selectedStock ? "Update" : "Create"}
                 </Button>
                 <Button onClick={onClose}>Cancel</Button>

@@ -7,6 +7,7 @@ import Stocks from "./stocks/index";
 import Profile from "./Account/Profile";
 import AccountEdit from "./Account/AccountEdit";
 import { PageSlideFade } from "../../animations/page-transitions";
+import Vendors from "./vendors/index";
 
 const Home = () => {
   return (
@@ -15,6 +16,7 @@ const Home = () => {
         <Navbar />
         <Box width={'100%'} >
           <Switch>
+            <Route exact path="/vendors" component={Vendors} />
             <Route exact path="/stocks" component={Stocks} />
             <Route exact path="/home" component={MainSection} />
             <Route exact path="/account/edit" component={AccountEdit} />

@@ -75,6 +75,7 @@ const Signup = ({ history }) => {
         payload: { auth_token, email, is_admin: false },
       });
       userDispatch({ type: 'SET_USER', payload: { user } });
+      setAuthHeaders();
       history.push('/');
       toast({
         description: 'Sign up successfully.',

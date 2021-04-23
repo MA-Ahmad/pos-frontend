@@ -37,7 +37,8 @@ const Main = props => {
       <Switch>
         <Route exact path="/my/password/new" component={PasswordReset} />
         <Route exact path="/signup" component={Signup} />
-        {!isLoggedIn && <Route exact path="/" component={Hero} />}
+        {/* {!isLoggedIn && <Route exact path="/" component={Hero} />} */}
+        {!isLoggedIn && <Route exact path="/" component={Login} />}
         <Route exact path="/login" component={Login} />
         <PrivateRoute
           path="/"

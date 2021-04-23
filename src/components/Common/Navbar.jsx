@@ -29,7 +29,8 @@ import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
 import logo from "../../assets/images/logo.jpg";
 
-const Links = ["Dashboard", "Profile"];
+const Links = ["Home", "Vendors", "Profile"];
+// const Links = ["Vendors", "Profile"];
 const NavLink = props => (
   <ChakraLink
     as={Link}
@@ -111,9 +112,9 @@ const Navbar = () => {
                   <NavLink key={link} link={link} />
                 ))}
               </VStack>
-              <Box>
+              {/* <Box>
                 <ColorModeSwitcher justifySelf="flex-end" />
-              </Box>
+              </Box> */}
             </VStack>
           </Box>
           <Flex alignItems={"center"}>

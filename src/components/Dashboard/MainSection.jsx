@@ -8,6 +8,7 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { PageSlideFade } from '../../animations/page-transitions';
+import { Link } from 'react-router-dom';
 
 export default function MainSection() {
   return (
@@ -30,19 +31,20 @@ export default function MainSection() {
                   zIndex: -1,
                 }}
               >
-                Freelance
+                ALI
             </Text>
               <br />{' '}
               <Text color={'blue.400'} as={'span'}>
-                Design Projects
+                Point of sale
             </Text>{' '}
             </Heading>
             <Text fontSize={{ base: 'md', lg: 'lg' }} color={'gray.500'}>
-              The project board is an exclusive resource for contract work. It's
-              perfect for freelancers, agencies, and moonlighters.
+              Manage inventory and sale.
           </Text>
             <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
               <Button
+                as={Link}
+                to="/stocks"
                 rounded={'full'}
                 bg={'blue.400'}
                 color={'white'}
@@ -50,9 +52,10 @@ export default function MainSection() {
                   bg: 'blue.500',
                 }}
               >
-                Create Project
+                Stocks
             </Button>
-              <Button rounded={'full'}>How It Works</Button>
+              <Button as={Link}
+                to="/vendors" rounded={'full'}>Vendors</Button>
             </Stack>
           </Stack>
         </Flex>
