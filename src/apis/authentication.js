@@ -1,4 +1,5 @@
-import axios, { baseUrl } from "axios";
+import axios from "axios";
+import { baseUrl } from "./baseUrl";
 
 const login = payload => axios.post(`${baseUrl}api/v1/login`, payload);
 
