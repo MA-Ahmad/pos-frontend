@@ -1,8 +1,8 @@
-import React from 'react';
-import { ChakraProvider, Box, Grid, theme } from '@chakra-ui/react';
-import Main from './components/Main';
-import { AuthProvider } from './contexts/auth';
-import { UserProvider } from './contexts/user';
+import React from "react";
+import { ChakraProvider, Box, theme } from "@chakra-ui/react";
+import Main from "./components/Main";
+import { AuthProvider } from "./contexts/auth";
+import { UserProvider } from "./contexts/user";
 
 function App(props) {
   return (
