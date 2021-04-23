@@ -82,12 +82,8 @@ const Navbar = () => {
             />
             <VStack spacing={4} alignItems={"center"}>
               <Box>
-                <Image
-                  borderRadius="full"
-                  boxSize="50px"
-                  src={logo}
-                  alt="logo"
-                />
+                
+                <Avatar src={logo} size="md" name="Logo" />
               </Box>
               <Box>
                 <Tooltip label="Stock" fontSize="md" placement="right" hasArrow closeOnClick={true}>
