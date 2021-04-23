@@ -51,7 +51,8 @@ export default function Vendors() {
       const response = await vendorsApi.fetch();
       setVendors(response.data);
     } catch (error) {
-      showToast(error.response.data.error, "error");
+      console.log(error);
+      showToast("Something went wrong", "error");
     } finally {
       setLoading(false);
     }
@@ -73,10 +74,12 @@ export default function Vendors() {
         }
       });
       showToast("Vendor created successfully");
-      setVendors([response.data.vendor, ...vendors]);
+      console.log(vendors, response.data)
+      setVendors([response.data, ...vendors]);
       //   fetchVendors();
     } catch (error) {
-      showToast(error.response.data.error, "error");
+      console.log(error);
+      showToast("Something went wrong", "error");
     }
   };
 
@@ -91,7 +94,8 @@ export default function Vendors() {
       updateVendorsState(id, values);
       //   fetchVendors();
     } catch (error) {
-      showToast(error.response.data.error, "error");
+      console.log(error);
+      showToast("Something went wrong", "error");
       window.location.reload();
       // logger.error(err);
     }
@@ -111,10 +115,10 @@ export default function Vendors() {
       // setLoading(true);
       const response = await vendorsApi.destroy({ ids: checkedVendorIds });
       fetchVendors();
-      showToast(response.data.notice);
+      showToast(response.data);
     } catch (error) {
-      showToast(error.response.data.error, "error");
-      console.log(error.response.data.error);
+      console.log(error);
+      showToast("Something went wrong", "error");
     } finally {
       // setLoading(false);
     }

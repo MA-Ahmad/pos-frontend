@@ -80,6 +80,7 @@ export default function Stocks() {
     try {
       setLoading(true);
       const response = await stocksApi.fetch();
+      console.log(response)
       let checkedList = [];
       response.data.map(stock => checkedList.push(false));
       setCheckedItems(checkedList);
@@ -106,7 +107,6 @@ export default function Stocks() {
   };
 
   const handleStockUpdate = (newStock: stock) => {
-    //   console.log(newStock)
     const newStockList: stock[] = [...stockList];
     const index = stockList.findIndex(
       (stock: stock) => stock.id === newStock.id
@@ -166,7 +166,7 @@ export default function Stocks() {
       const response = await stocksApi.destroy({ ids: checkedStockIds });
       onClose();
       fetchStocks();
-      showToast(response.data.notice);
+      showToast(response.data);
     } catch (error) {
     } finally {
       setLoading(false);

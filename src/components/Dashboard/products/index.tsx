@@ -48,7 +48,7 @@ const Products: React.SFC<ProductsProps> = () => {
       const response = await productsApi.fetch();
       setProducts(response.data);
     } catch (error) {
-      showToast(error.response.data.error, "error");
+      showToast("Something went wrong", "error");
     } finally {
       setLoading(false);
     }
@@ -69,11 +69,12 @@ const Products: React.SFC<ProductsProps> = () => {
           name: values.name
         }
       });
+
       showToast("Product created successfully");
-      setProducts([response.data.product, ...products]);
+      setProducts([response.data, ...products]);
       // fetchProducts();
     } catch (error) {
-      showToast(error.response.data.error, "error");
+      showToast("Something went wrong", "error");
     }
   };
 
@@ -88,7 +89,7 @@ const Products: React.SFC<ProductsProps> = () => {
       // fetchProducts();
       updateProductsState(id, values);
     } catch (error) {
-      showToast(error.response.data.error, "error");
+      showToast("Something went wrong", "error");
       window.location.reload();
       // logger.error(err);
     }
@@ -100,7 +101,6 @@ const Products: React.SFC<ProductsProps> = () => {
     product.name = values.name;
     products[index] = product;
     setProducts(products);
-    console.log(products);
   };
 
   const handleDelete = async () => {
@@ -108,10 +108,9 @@ const Products: React.SFC<ProductsProps> = () => {
       // setLoading(true);
       const response = await productsApi.destroy({ ids: checkedProductIds });
       fetchProducts();
-      showToast(response.data.notice);
+      showToast(response.data);
     } catch (error) {
-      showToast(error.response.data.error, "error");
-      console.log(error.response.data.error);
+      showToast("Something went wrong", "error");
     } finally {
       // setLoading(false);
     }
