@@ -127,7 +127,7 @@ export default function Stocks({ type }) {
       <Stack>
         <HStack justify={"space-between"} p={5}>
           <Box>
-            <Heading fontSize={"xl"}>{type.split("_").join(" ")}</Heading>
+            <Heading fontSize={"xl"}>{type.split("_").join(" ")} Stock</Heading>
           </Box>
           <Box>
             <Button
