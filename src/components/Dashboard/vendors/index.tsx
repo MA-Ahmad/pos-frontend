@@ -118,7 +118,7 @@ export default function Vendors() {
       showToast(response.data);
     } catch (error) {
       console.log(error);
-      showToast("Something went wrong", "error");
+      showToast("Can't delete this vendor", "error");
     } finally {
       // setLoading(false);
     }

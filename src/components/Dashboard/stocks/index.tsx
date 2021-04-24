@@ -2,14 +2,6 @@ import * as React from "react";
 import {
   Stack,
   Box,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
   HStack,
   Heading,
   Button,
@@ -17,9 +9,6 @@ import {
   useDisclosure,
   useColorModeValue,
   useToast,
-  Checkbox,
-  IconButton,
-  Tooltip,
   Input,
   InputGroup,
   InputLeftElement
@@ -27,7 +16,6 @@ import {
 import { AddIcon, DeleteIcon, Search2Icon } from "@chakra-ui/icons";
 import StockModal from "./stock-modal";
 import { PageSlideFade } from "../../../animations/page-transitions";
-import { FiEdit, FiDelete } from "react-icons/fi";
 import PageLoader from "../../Common/PageLoader";
 import stocksApi from "../../../apis/stocks";
 import TableData from "./TableData";
@@ -50,7 +38,7 @@ export default function Stocks({ type }) {
   const fetchStocks = async () => {
     try {
       setLoading(true);
-      const response = await stocksApi.fetch(type.split('_').join(''));
+      const response = await stocksApi.fetch(type.split("_").join(""));
       let checkedList = [];
       response.data.map(stock => checkedList.push(false));
       setCheckedItems(checkedList);
@@ -190,91 +178,6 @@ export default function Stocks({ type }) {
             maxHeight={"71vh"}
             overflowY="scroll"
           >
-            {/* <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th width="10px">
-                    <Checkbox
-                      isChecked={
-                        checkedStockIds.length ===
-                        stockList.map(stock => stock.id).length
-                      }
-                      onChange={() => {
-                        const stockIds = stockList.map(stock => stock.id);
-                        if (checkedStockIds.length === stockIds.length) {
-                          setCheckedStockIds([]);
-                        } else {
-                          setCheckedStockIds(stockIds);
-                        }
-                      }}
-                    ></Checkbox>
-                  </Th>
-                  <Th>Vendor</Th>
-                  <Th>Product</Th>
-                  <Th>Quantity(kg)</Th>
-                  <Th>Price(per kg)</Th>
-                  <Th>Total Price</Th>
-                  <Th>Storage</Th>
-                  <Th width="10px"></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {stockList.map((stock, index) => (
-                  <Tr
-                    key={stock.id}
-                    _hover={{ bg: bg }}
-                    _groupHover={{ bg: bg }}
-                    cursor="pointer"
-                  >
-                    <Td width="10px">
-                      <Checkbox
-                        isChecked={checkedStockIds.includes(stock.id)}
-                        onChange={event => {
-                          event.stopPropagation();
-                          const index = checkedStockIds.indexOf(stock.id);
-
-                          if (index > -1) {
-                            setCheckedStockIds([
-                              ...checkedStockIds.slice(0, index),
-                              ...checkedStockIds.slice(index + 1)
-                            ]);
-                          } else {
-                            setCheckedStockIds([...checkedStockIds, stock.id]);
-                          }
-                        }}
-                      ></Checkbox>
-                    </Td>
-                    <Td>{stock.vendor ? stock.vendor.name : ""}</Td>
-                    <Td>{stock.product ? stock.product.name : ""}</Td>
-                    <Td>{stock.quantity}</Td>
-                    <Td>{stock.price}</Td>
-                    <Td>{(stock.price * stock.quantity).toFixed(2)}</Td>
-                    <Td>{stock.type.split("Stock")[0]}</Td>
-                    <Td width="10px">
-                      <HStack spacing={3}>
-                        <Tooltip
-                          label="Edit"
-                          fontSize="md"
-                          placement="top"
-                          hasArrow
-                          closeOnClick={true}
-                        >
-                          <IconButton
-                            variant="outline"
-                            colorScheme="messenger"
-                            aria-label="stocks"
-                            size="sm"
-                            icon={<FiEdit />}
-                            onClick={() => handleClick(stock.id)}
-                          />
-                        </Tooltip>
-                      </HStack>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-             */}
             <TableData
               type={type}
               checkedStockIds={checkedStockIds}
@@ -285,15 +188,15 @@ export default function Stocks({ type }) {
           </Box>
         </Box>
       </Stack>
-        <StockModal
-          isOpen={isOpen}
-          onClose={onClose}
-          selectedStock={selectedStock}
-          handleStockCreate={handleStockCreate}
-          handleStockUpdate={handleStockUpdate}
-          refetch={fetchStocks}
-          type={type}
-        />
+      <StockModal
+        isOpen={isOpen}
+        onClose={onClose}
+        selectedStock={selectedStock}
+        handleStockCreate={handleStockCreate}
+        handleStockUpdate={handleStockUpdate}
+        refetch={fetchStocks}
+        type={type}
+      />
     </PageSlideFade>
   );
 }

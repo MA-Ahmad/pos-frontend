@@ -110,7 +110,7 @@ const Products: React.SFC<ProductsProps> = () => {
       fetchProducts();
       showToast(response.data);
     } catch (error) {
-      showToast("Something went wrong", "error");
+      showToast("Can't delete this product", "error");
     } finally {
       // setLoading(false);
     }
