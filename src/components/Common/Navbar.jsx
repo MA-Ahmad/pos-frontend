@@ -30,6 +30,8 @@ import { ColorModeSwitcher } from "../../ColorModeSwitcher";
 import logo from "../../assets/images/logo.jpg";
 
 const Links = ["Home", "Vendors", "Profile"];
+
+const stockLinks = ['Factory', 'Cold storage', 'Warehouse', 'Shop']
 // const Links = ["Vendors", "Profile"];
 const NavLink = props => (
   <ChakraLink
@@ -84,11 +86,21 @@ const Navbar = () => {
               <Box>
                 <Avatar src={logo} size="md" name="Company Logo" />
               </Box>
-              <Box>
-                <Tooltip label="Stock" fontSize="md" placement="right" hasArrow closeOnClick={true}>
+              {/* <Box> */}
+              {/* <Tooltip label="Stock" fontSize="md" placement="right" hasArrow closeOnClick={true}>
+                  
+                </Tooltip> */}
+              <Menu placement='right-start'>
+                <MenuButton
+                  as={Button}
+                  size={"sm"}
+                  variant={"link"}
+                  cursor={"pointer"}
+                  _hover={{ textDecoration: "none" }}
+                >
                   <IconButton
-                    as={Link}
-                    to="/stocks"
+                    // as={Link}
+                    // to="/stocks"
                     variant="outline"
                     colorScheme="messenger"
                     aria-label="stocks"
@@ -96,8 +108,15 @@ const Navbar = () => {
                     size="md"
                     icon={<CgNotes />}
                   />
-                </Tooltip>
-              </Box>
+                </MenuButton>
+
+                <MenuList fontSize={17} zIndex={5555}>
+                  {stockLinks.map((link) => <MenuItem as={Link} to={`/stocks?type=${link.split(' ').join('_')}`}>
+                    {link}
+                  </MenuItem>)}
+                </MenuList>
+              </Menu>
+              {/* </Box> */}
               <VStack
                 as={"nav"}
                 // spacing={4}

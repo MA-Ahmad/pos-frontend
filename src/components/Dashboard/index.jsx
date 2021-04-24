@@ -9,7 +9,17 @@ import AccountEdit from "./Account/AccountEdit";
 import { PageSlideFade } from "../../animations/page-transitions";
 import Vendors from "./vendors/index";
 
-const Home = () => {
+const useQuery = () => {
+  let obj = new URL(window.location.href)
+  if (obj.href.includes('type=')) {
+    let url_array = obj.href.split('type=')
+    return url_array[url_array.length - 1]
+  }
+}
+
+const Home = ({ history }) => {
+  let query = useQuery();
+
   return (
     <PageSlideFade>
       <Flex width={'100%'} height={'100vh'} maxHeight={'100vh'}>
@@ -17,7 +27,7 @@ const Home = () => {
         <Box width={'100%'} >
           <Switch>
             <Route exact path="/vendors" component={Vendors} />
-            <Route exact path="/stocks" component={Stocks} />
+            <Route exact path="/stocks" component={() => <Stocks type={query} />} />
             <Route exact path="/home" component={MainSection} />
             <Route exact path="/account/edit" component={AccountEdit} />
             <Route exact path="/profile" component={Profile} />

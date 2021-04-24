@@ -37,6 +37,7 @@ export interface StockModalProps {
   handleStockCreate?: (stock: stock) => void;
   handleStockUpdate?: (stock: stock) => void;
   refetch: () => void;
+  type: string;
 }
 
 const StockModal: React.SFC<StockModalProps> = ({
@@ -45,6 +46,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   selectedStock,
   handleStockCreate,
   handleStockUpdate,
+  type,
   refetch
 }) => {
   const [initialValues, setInitialValues] = React.useState({
@@ -94,9 +96,10 @@ const StockModal: React.SFC<StockModalProps> = ({
     if (!products.length) fetchProducts();
 
     if (selectedStock) {
+      console.log(selectedStock);
       let stock: stock = {
         id: selectedStock.id,
-        vendor: selectedStock.vendor.id,
+        vendor: selectedStock.vendor?.id,
         product: selectedStock.product.id,
         quantity: selectedStock.quantity,
         price: selectedStock.price
@@ -133,10 +136,11 @@ const StockModal: React.SFC<StockModalProps> = ({
     try {
       await stocksApi.create({
         stock: {
-          vendor_id: values.vendor,
+          vendor_id: values?.vendor,
           product_id: values.product,
           quantity: quantity,
-          price: price
+          price: price,
+          type: `${type.split('_').join('')}Stock`
         }
       });
       refetch();
@@ -197,7 +201,13 @@ const StockModal: React.SFC<StockModalProps> = ({
         <Formik
           enableReinitialize
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={
+            type === "Factory"
+              ? validationSchema
+              : Yup.object({
+                  product: Yup.string().required("Product is required")
+                })
+          }
           onSubmit={values => {
             console.log(values);
             handleSave(values);
@@ -214,64 +224,38 @@ const StockModal: React.SFC<StockModalProps> = ({
           }) => (
             <Form>
               <ModalBody pb={0} pt={0}>
-                {/* <FormControl>
-            <FormLabel>Vendor</FormLabel>
-            <Select
-              placeholder="Select a vendor"
-              value={vendor}
-              onChange={event => handleVendorChange(event)}
-            >
-              {vendors.map(vendor => (
-                <option value={vendor} key={vendor}>
-                  {vendor}
-                </option>
-              ))}
-            </Select>
-          </FormControl> */}
                 <Stack>
-                  <Box>
-                    <Field name="vendor" width={"100%"}>
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={form.errors.vendor && form.touched.vendor}
-                        >
-                          <FormLabel htmlFor="vendor">Vendor</FormLabel>
-                          <Select
-                            {...field}
-                            id="vendor"
-                            placeholder="Select a vendor"
-                            // value={vendor}
-                            // onChange={event => handleVendorChange(event)}
-                            value={values.vendor}
-                            onChange={handleChange}
+                  {type === "Factory" && (
+                    <Box>
+                      <Field name="vendor" width={"100%"}>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={
+                              form.errors.vendor && form.touched.vendor
+                            }
                           >
-                            {vendors.map(vendor => (
-                              <option value={vendor.id} key={vendor.id}>
-                                {vendor.name}
-                              </option>
-                            ))}
-                          </Select>
-                          <FormErrorMessage mt={0}>
-                            {form.errors.vendor}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                  </Box>
-                  {/* <FormControl mt={4}>
-                  <FormLabel>Product</FormLabel>
-                  <Select
-                    placeholder="Select a product"
-                    value={product}
-                    onChange={event => handleStockChange(event)}
-                  >
-                    {products.map(product => (
-                      <option value={product} key={product}>
-                        {product}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl> */}
+                            <FormLabel htmlFor="vendor">Vendor</FormLabel>
+                            <Select
+                              {...field}
+                              id="vendor"
+                              placeholder="Select a vendor"
+                              value={values.vendor}
+                              onChange={handleChange}
+                            >
+                              {vendors.map(vendor => (
+                                <option value={vendor.id} key={vendor.id}>
+                                  {vendor.name}
+                                </option>
+                              ))}
+                            </Select>
+                            <FormErrorMessage mt={0}>
+                              {form.errors.vendor}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Box>
+                  )}
                   <Box>
                     <Field name="product" width={"100%"}>
                       {({ field, form }) => (

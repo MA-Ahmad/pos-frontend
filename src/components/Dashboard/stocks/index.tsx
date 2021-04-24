@@ -30,47 +30,18 @@ import { PageSlideFade } from "../../../animations/page-transitions";
 import { FiEdit, FiDelete } from "react-icons/fi";
 import PageLoader from "../../Common/PageLoader";
 import stocksApi from "../../../apis/stocks";
+import TableData from "./TableData";
 
-const stocks = [
-  {
-    id: "Odork5n5jPVd0wvm0w_dY",
-    vendor: "Kfc",
-    product: "Chae",
-    quantity: "15"
-  },
-  {
-    id: "Odsfdork5n5jPVd0wvm0w_dY",
-    vendor: "RohAfza",
-    product: "Chae",
-    quantity: "9"
-  },
-  {
-    id: "Odorkeee5n5jPVd0wvm0w_dY",
-    vendor: "Title",
-    product: "Kofee",
-    quantity: "13"
-  },
-  {
-    id: "Odork5n5dfjPVd0wvm0w_dY",
-    vendor: "Vitol",
-    product: "Doodh",
-    quantity: "5"
-  }
-];
-
-export default function Stocks() {
+export default function Stocks({ type }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = React.useState(true);
   const [stockList, setStockList] = React.useState([]);
   const [selectedStock, setSelectedStock] = React.useState<stock>(null);
   const bg = useColorModeValue("#f9f7f5", "gray.700");
   const toast = useToast();
-
   const [checkedStockIds, setCheckedStockIds] = React.useState([]);
   const [checkedItems, setCheckedItems] = React.useState([]);
   const allChecked = checkedItems.every(Boolean);
-  const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
-  const someChecked = checkedItems.some(Boolean);
 
   React.useEffect(() => {
     fetchStocks();
@@ -79,8 +50,7 @@ export default function Stocks() {
   const fetchStocks = async () => {
     try {
       setLoading(true);
-      const response = await stocksApi.fetch();
-      console.log(response)
+      const response = await stocksApi.fetch(type.split('_').join(''));
       let checkedList = [];
       response.data.map(stock => checkedList.push(false));
       setCheckedItems(checkedList);
@@ -91,13 +61,6 @@ export default function Stocks() {
       setLoading(false);
     }
   };
-
-  //   React.useEffect(() => {
-  //     let checkedList = [];
-  //     stocks.map(stock => checkedList.push(false));
-  //     setCheckedItems(checkedList);
-  //     setStockList(stocks);
-  //   }, []);
 
   const handleStockCreate = (stock: stock) => {
     const newStocksState: stock[] = [...stockList];
@@ -135,30 +98,6 @@ export default function Stocks() {
       isClosable: true
     });
   };
-
-  const handleChildCheck = index => {
-    console.log(isIndeterminate);
-
-    let checkedArray = [...checkedItems];
-    checkedArray[index] = !checkedItems[index];
-    setCheckedItems(checkedArray);
-  };
-
-  const handleParentCheck = () => {
-    console.log(isIndeterminate);
-    let checkedArray = [];
-    if (allChecked) checkedItems.map(item => checkedArray.push(false));
-    else checkedItems.map(item => checkedArray.push(true));
-    setCheckedItems(checkedArray);
-  };
-
-  //   const handleDelete = (id: string) => {
-  //     const newStockList: stock[] = stockList.filter(
-  //       (stock: stock) => stock.id !== id
-  //     );
-  //     setStockList(newStockList);
-  //     showToast("Stock deleted successfully");
-  //   };
 
   const handleDelete = async () => {
     try {
@@ -200,7 +139,7 @@ export default function Stocks() {
       <Stack>
         <HStack justify={"space-between"} p={5}>
           <Box>
-            <Heading fontSize={"xl"}>Stock</Heading>
+            <Heading fontSize={"xl"}>{type.split("_").join(" ")}</Heading>
           </Box>
           <Box>
             <Button
@@ -237,7 +176,6 @@ export default function Stocks() {
             size="sm"
             _hover={{ boxShadow: "none" }}
             onClick={() => handleDelete()}
-            // isDisabled={!someChecked}
             isDisabled={!checkedStockIds.length}
           >
             Delete
@@ -252,17 +190,11 @@ export default function Stocks() {
             maxHeight={"71vh"}
             overflowY="scroll"
           >
-            <Table variant="simple">
-              {/* <TableCaption mt={0} placement="top">
-                <Heading fontSize={"md"}>Stock Data</Heading>
-              </TableCaption> */}
+            {/* <Table variant="simple">
               <Thead>
                 <Tr>
                   <Th width="10px">
                     <Checkbox
-                      //   isChecked={allChecked}
-                      //   isIndeterminate={isIndeterminate}
-                      //   onChange={e => handleParentCheck()}
                       isChecked={
                         checkedStockIds.length ===
                         stockList.map(stock => stock.id).length
@@ -281,7 +213,8 @@ export default function Stocks() {
                   <Th>Product</Th>
                   <Th>Quantity(kg)</Th>
                   <Th>Price(per kg)</Th>
-                  <Th>Total</Th>
+                  <Th>Total Price</Th>
+                  <Th>Storage</Th>
                   <Th width="10px"></Th>
                 </Tr>
               </Thead>
@@ -292,12 +225,9 @@ export default function Stocks() {
                     _hover={{ bg: bg }}
                     _groupHover={{ bg: bg }}
                     cursor="pointer"
-                    // onClick={() => handleClick(stock.id)}
                   >
                     <Td width="10px">
                       <Checkbox
-                        // isChecked={checkedItems[index]}
-                        // onChange={e => handleChildCheck(index)}
                         isChecked={checkedStockIds.includes(stock.id)}
                         onChange={event => {
                           event.stopPropagation();
@@ -319,6 +249,7 @@ export default function Stocks() {
                     <Td>{stock.quantity}</Td>
                     <Td>{stock.price}</Td>
                     <Td>{(stock.price * stock.quantity).toFixed(2)}</Td>
+                    <Td>{stock.type.split("Stock")[0]}</Td>
                     <Td width="10px">
                       <HStack spacing={3}>
                         <Tooltip
@@ -337,46 +268,32 @@ export default function Stocks() {
                             onClick={() => handleClick(stock.id)}
                           />
                         </Tooltip>
-                        {/* <Tooltip
-                          label="Delete"
-                          fontSize="md"
-                          placement="top"
-                          hasArrow
-                          closeOnClick={true}
-                        >
-                          <IconButton
-                            variant="outline"
-                            colorScheme="messenger"
-                            aria-label="stocks"
-                            size="sm"
-                            icon={<FiDelete />}
-                            onClick={() => handleDelete(stock.id)}
-                          />
-                        </Tooltip> */}
                       </HStack>
                     </Td>
                   </Tr>
                 ))}
               </Tbody>
-              {/* <Tfoot>
-                <Tr>
-                  <Th>To convert</Th>
-                  <Th>into</Th>
-                  <Th>multiply by</Th>
-                </Tr>
-              </Tfoot> */}
             </Table>
+             */}
+            <TableData
+              type={type}
+              checkedStockIds={checkedStockIds}
+              setCheckedStockIds={setCheckedStockIds}
+              stockList={stockList}
+              handleClick={handleClick}
+            />
           </Box>
         </Box>
       </Stack>
-      <StockModal
-        isOpen={isOpen}
-        onClose={onClose}
-        selectedStock={selectedStock}
-        handleStockCreate={handleStockCreate}
-        handleStockUpdate={handleStockUpdate}
-        refetch={fetchStocks}
-      />
+        <StockModal
+          isOpen={isOpen}
+          onClose={onClose}
+          selectedStock={selectedStock}
+          handleStockCreate={handleStockCreate}
+          handleStockUpdate={handleStockUpdate}
+          refetch={fetchStocks}
+          type={type}
+        />
     </PageSlideFade>
   );
 }
