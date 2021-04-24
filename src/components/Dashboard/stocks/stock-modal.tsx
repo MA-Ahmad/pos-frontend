@@ -134,21 +134,20 @@ const StockModal: React.SFC<StockModalProps> = ({
 
   const createStock = async values => {
     try {
-      await stocksApi.create({
+      const response = await stocksApi.create({
         stock: {
           vendor_id: values?.vendor,
           product_id: values.product,
           quantity: quantity,
           price: price,
-          type: `${type.split('_').join('')}Stock`
+          type: `${type.split("_").join("")}Stock`
         }
       });
       refetch();
+      showToast("Stock created successfully");
       onClose();
     } catch (err) {
-      // logger.error(err);
-    } finally {
-      showToast("Stock created successfully");
+      showToast("Not enough stock available", "error");
     }
   };
 
@@ -163,18 +162,20 @@ const StockModal: React.SFC<StockModalProps> = ({
         }
       });
       refetch();
+      showToast("Stock updated successfully");
       onClose();
     } catch (err) {
-      // logger.error(err);
-    } finally {
-      showToast("Stock updated successfully");
+      showToast("Not enough stock available", "error");
     }
+    // finally {
+    //   showToast("Stock updated successfully");
+    // }
   };
 
-  const showToast = text => {
+  const showToast = (text, type = "success") => {
     toast({
       description: text,
-      status: "success",
+      status: type,
       duration: 1500,
       isClosable: true
     });
