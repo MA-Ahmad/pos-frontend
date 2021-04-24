@@ -102,8 +102,8 @@ const TableData: React.SFC<TableDataProps> = ({
               <Td>{stock.vendor ? stock.vendor.name : ""}</Td>
             )}
             <Td>{stock.product ? stock.product.name : ""}</Td>
-            <Td>{stock.quantity}</Td>
-            <Td>{stock.price}</Td>
+            <Td>{stock.quantity.toFixed(2)}</Td>
+            <Td>{stock.price.toFixed(2)}</Td>
             <Td>{(stock.price * stock.quantity).toFixed(2)}</Td>
             <Td>{stock.type.split("Stock")[0]}</Td>
             <Td width="10px">
