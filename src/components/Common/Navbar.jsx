@@ -27,7 +27,7 @@ import { resetAuthTokens } from "../../apis/axios";
 import { useUserState } from "../../contexts/user";
 import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import logo from "../../assets/images/logo.jpg";
+import logo from "../../assets/images/hafizDiaries.jpeg";
 
 const Links = ["Home", "Vendors", "Profile"];
 
@@ -86,7 +86,7 @@ const Navbar = () => {
               <Box>
                 <Avatar
                   src={logo}
-                  size="md"
+                  size="lg"
                   name="Company Logo"
                   as={Link}
                   to="/home"
