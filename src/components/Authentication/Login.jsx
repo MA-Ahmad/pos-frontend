@@ -15,6 +15,7 @@ import {
   HStack,
   useToast,
   FormErrorMessage,
+  Text
 } from '@chakra-ui/react';
 import { setAuthHeaders } from '../../apis/axios';
 import authenticationApi from '../../apis/authentication';
@@ -41,7 +42,7 @@ const Login = ({ history }) => {
     email: '',
     password: '',
   });
-  
+
   const [loading, setLoading] = useState(false);
   const authDispatch = useAuthDispatch();
   const userDispatch = useUserDispatch();
@@ -180,8 +181,8 @@ const Login = ({ history }) => {
           </Formik>
         </Box>
         <Box px={8}>
-          <HStack justifyContent="center">
-            <InternalLink text={'Signup'} path={'/signup'} />
+          <HStack justifyContent="center" spacing={2}>
+            <Text>Don't have an account?</Text><InternalLink text={'Signup'} path={'/signup'} />
             {/* <InternalLink text={'Forgot password?'} path={'/my/password/new'} /> */}
           </HStack>
         </Box>

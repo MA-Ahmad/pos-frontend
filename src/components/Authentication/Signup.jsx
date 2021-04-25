@@ -14,7 +14,8 @@ import {
   useColorModeValue,
   HStack,
   FormErrorMessage,
-  useToast
+  useToast,
+  Text
 } from '@chakra-ui/react';
 import { setAuthHeaders } from '../../apis/axios';
 import authenticationApi from '../../apis/authentication';
@@ -271,7 +272,7 @@ const Signup = ({ history }) => {
 
                     <Stack spacing={10}>
                       <Button
-                      isLoading={loading}
+                        isLoading={loading}
                         bg={'blue.400'}
                         color={'white'}
                         _hover={{
@@ -289,8 +290,8 @@ const Signup = ({ history }) => {
           </Formik>
         </Box>
         <Box px={8} minWidth={['16em', '25em']}>
-          <HStack justifyContent="center">
-            <InternalLink text={'Login'} path={'/signin'} />
+          <HStack justifyContent="center" spacing={2}>
+            <Text>Already have an account?</Text><InternalLink text={'Login'} path={'/signin'} />
           </HStack>
         </Box>
       </Stack>
