@@ -60,8 +60,8 @@ const TableData: React.SFC<TableDataProps> = ({
           <Th>Quantity(kg)</Th>
           <Th>Price(per kg)</Th>
           <Th>Total Price</Th>
-          <Th>Storage</Th>
-          <Th>Created time</Th>
+          {/* <Th>Storage</Th> */}
+          <Th>Time ago</Th>
           <Th>Date</Th>
           <Th width="10px"></Th>
         </Tr>
@@ -99,7 +99,7 @@ const TableData: React.SFC<TableDataProps> = ({
             <Td>{stock.quantity}</Td>
             <Td>{stock.price}</Td>
             <Td>{(stock.price * stock.quantity)?.toFixed(2)}</Td>
-            <Td>{stock.type.split("Stock")[0]}</Td>
+            {/* <Td>{stock.type.split("Stock")[0]}</Td> */}
             <Td><Moment toNow>{stock.created_at}</Moment></Td>
             <Td><Moment format="DD/MM/YYYY">{stock.created_at}</Moment></Td>
             <Td width="10px">

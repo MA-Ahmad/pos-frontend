@@ -3,12 +3,14 @@ import {
   Stack,
   Box,
   HStack,
+  VStack,
   Heading,
   Button,
   Divider,
   useDisclosure,
   useColorModeValue,
   useToast,
+  Text,
   Input,
   InputGroup,
   InputLeftElement
@@ -175,7 +177,7 @@ export default function Stocks({ type }) {
             border="1px"
             borderColor="gray.200"
             rounded="md"
-            maxHeight={"71vh"}
+            maxHeight={"60vh"}
             overflowY="scroll"
           >
             <TableData
@@ -185,6 +187,33 @@ export default function Stocks({ type }) {
               stockList={stockList}
               handleClick={handleClick}
             />
+          </Box>
+          <Box> {stockList.length ?
+            <VStack p={4} justify="center">
+              <HStack align="center">
+                <Heading fontSize={"xl"}>Stocks total price: </Heading>
+                <Text>
+                  {stockList
+                    .map(s => s.price * s.quantity)
+                    .reduce((a, c) => {
+                      return a + c;
+                    })
+                    .toFixed(2)}
+                </Text>
+              </HStack>
+              <HStack align="center">
+                <Heading fontSize={"xl"}>Stocks total quantity (kg): </Heading>
+                <Text>
+                  {stockList
+                    .map(s => s.quantity)
+                    .reduce((a, c) => {
+                      return a + c;
+                    })
+                    .toFixed(2)}
+                </Text>
+              </HStack>
+            </VStack> : ""
+          }
           </Box>
         </Box>
       </Stack>
