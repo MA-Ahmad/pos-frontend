@@ -5,26 +5,18 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   HStack,
-  Heading,
-  Button,
-  Divider,
-  useDisclosure,
   useColorModeValue,
   useToast,
   Checkbox,
   IconButton,
   Tooltip,
-  Input,
-  InputGroup,
-  InputLeftElement
 } from "@chakra-ui/react";
 import { FiEdit, FiDelete } from "react-icons/fi";
+import Moment from 'react-moment';
 
 export interface TableDataProps {
   checkedStockIds: any[];
@@ -69,6 +61,8 @@ const TableData: React.SFC<TableDataProps> = ({
           <Th>Price(per kg)</Th>
           <Th>Total Price</Th>
           <Th>Storage</Th>
+          <Th>Created time</Th>
+          <Th>Date</Th>
           <Th width="10px"></Th>
         </Tr>
       </Thead>
@@ -106,6 +100,8 @@ const TableData: React.SFC<TableDataProps> = ({
             <Td>{stock.price}</Td>
             <Td>{(stock.price * stock.quantity)?.toFixed(2)}</Td>
             <Td>{stock.type.split("Stock")[0]}</Td>
+            <Td><Moment toNow>{stock.created_at}</Moment></Td>
+            <Td><Moment format="DD/MM/YYYY">{stock.created_at}</Moment></Td>
             <Td width="10px">
               <HStack spacing={3}>
                 <Tooltip
