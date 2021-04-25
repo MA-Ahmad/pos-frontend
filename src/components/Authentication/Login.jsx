@@ -179,12 +179,12 @@ const Login = ({ history }) => {
             }}
           </Formik>
         </Box>
-        <Box px={8}>
+        {/* <Box px={8}>
           <HStack justifyContent="space-between">
             <InternalLink text={'Signup'} path={'/signup'} />
             <InternalLink text={'Forgot password?'} path={'/my/password/new'} />
           </HStack>
-        </Box>
+        </Box> */}
       </Stack>
     </Flex>
   );

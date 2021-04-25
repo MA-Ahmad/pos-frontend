@@ -144,7 +144,7 @@ export default function Stocks({ type }) {
           </Box>
         </HStack>
         <HStack justify={"space-between"} px={5} py={2}>
-          <InputGroup size="sm">
+          {/* <InputGroup size="sm">
             <InputLeftElement
               pointerEvents="none"
               children={<Search2Icon color="gray.300" />}
@@ -155,7 +155,7 @@ export default function Stocks({ type }) {
               borderRadius="5px"
               placeholder="Search"
             />
-          </InputGroup>
+          </InputGroup> */}
           <Button
             leftIcon={<DeleteIcon />}
             variant="outline"
