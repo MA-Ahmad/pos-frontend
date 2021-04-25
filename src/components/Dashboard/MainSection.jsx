@@ -43,7 +43,7 @@ export default function MainSection() {
                     zIndex: -1,
                   }}
                 >
-                  Demo
+                  Hafiz Diaries
               </Text>
                 <br />{' '}
                 <Text color={'blue.400'} as={'span'}>
