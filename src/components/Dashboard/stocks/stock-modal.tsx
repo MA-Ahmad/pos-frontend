@@ -53,7 +53,7 @@ const StockModal: React.SFC<StockModalProps> = ({
     vendor: "",
     product: "",
     quantity: "1.0",
-    price: "1.0"
+    price: "100.0"
   });
   const vendorRef = React.useRef<HTMLInputElement>(null);
   const productRef = React.useRef<HTMLInputElement>(null);
@@ -61,7 +61,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   const [vendor, setVendor] = React.useState("");
   const [product, setProduct] = React.useState("");
   const [quantity, setQuantity] = React.useState("1.0");
-  const [price, setPrice] = React.useState("1.0");
+  const [price, setPrice] = React.useState("100.0");
   const [loading, setLoading] = React.useState(true);
   const [vendors, setVendors] = React.useState([]);
   const [products, setProducts] = React.useState([]);
@@ -115,11 +115,11 @@ const StockModal: React.SFC<StockModalProps> = ({
         vendor: "",
         product: "",
         quantity: "1.0",
-        price: "1.0"
+        price: "100.0"
       };
       setInitialValues(stock);
       setQuantity("1.0");
-      setPrice("1.0");
+      setPrice("100.0");
     }
   }, [isOpen]);
 
@@ -291,7 +291,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                       <FormLabel>Quantity(kg)</FormLabel>
                       <NumberInput
                         min={1}
-                        max={100}
+                        max={10000}
                         defaultValue={quantity}
                         clampValueOnBlur={false}
                         step={0.2}
@@ -310,7 +310,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                       <FormLabel>Price(kg)</FormLabel>
                       <NumberInput
                         min={1}
-                        max={5000}
+                        max={10000}
                         defaultValue={price}
                         clampValueOnBlur={false}
                         step={0.2}
