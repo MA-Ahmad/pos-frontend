@@ -44,8 +44,6 @@ const StockModal: React.SFC<StockModalProps> = ({
   isOpen,
   onClose,
   selectedStock,
-  handleStockCreate,
-  handleStockUpdate,
   type,
   refetch
 }) => {
@@ -53,15 +51,14 @@ const StockModal: React.SFC<StockModalProps> = ({
     vendor: "",
     product: "",
     quantity: "1.0",
-    price: "100.0"
+    price: "100.0",
+    balance: "0.0"
   });
   const vendorRef = React.useRef<HTMLInputElement>(null);
   const productRef = React.useRef<HTMLInputElement>(null);
-  const quantityRef = React.useRef<HTMLInputElement>(null);
-  const [vendor, setVendor] = React.useState("");
-  const [product, setProduct] = React.useState("");
   const [quantity, setQuantity] = React.useState("1.0");
   const [price, setPrice] = React.useState("100.0");
+  const [balance, setBalance] = React.useState("0.0");
   const [loading, setLoading] = React.useState(true);
   const [vendors, setVendors] = React.useState([]);
   const [products, setProducts] = React.useState([]);
@@ -102,24 +99,26 @@ const StockModal: React.SFC<StockModalProps> = ({
         vendor: selectedStock.vendor?.id,
         product: selectedStock.product.id,
         quantity: selectedStock.quantity,
-        price: selectedStock.price
+        price: selectedStock.price,
+        balance: selectedStock.balance
       };
       setInitialValues(stock);
-      // setVendor(selectedStock.vendor);
-      // setProduct(selectedStock.product);
       setQuantity(selectedStock.quantity);
       setPrice(selectedStock.price);
+      setBalance(selectedStock.balance);
     } else {
       let stock: stock = {
         id: "",
         vendor: "",
         product: "",
         quantity: "1.0",
-        price: "100.0"
+        price: "100.0",
+        balance: "0.0"
       };
       setInitialValues(stock);
       setQuantity("1.0");
       setPrice("100.0");
+      setBalance("0.0");
     }
   }, [isOpen]);
 
@@ -140,6 +139,7 @@ const StockModal: React.SFC<StockModalProps> = ({
           product_id: values.product,
           quantity: quantity,
           price: price,
+          balance: balance,
           type: `${type.split("_").join("")}Stock`
         }
       });
@@ -158,7 +158,8 @@ const StockModal: React.SFC<StockModalProps> = ({
           vendor_id: values.vendor,
           product_id: values.product,
           quantity: quantity,
-          price: price
+          price: price,
+          balance: balance
         }
       });
       refetch();
@@ -315,6 +316,25 @@ const StockModal: React.SFC<StockModalProps> = ({
                         clampValueOnBlur={false}
                         step={0.2}
                         onChange={value => setPrice(value)}
+                      >
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl>
+                      <FormLabel>Balance</FormLabel>
+                      <NumberInput
+                        min={1}
+                        max={10000}
+                        defaultValue={balance}
+                        clampValueOnBlur={false}
+                        step={0.2}
+                        onChange={value => setBalance(value)}
                       >
                         <NumberInputField />
                         <NumberInputStepper>

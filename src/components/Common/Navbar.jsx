@@ -29,7 +29,7 @@ import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
 import logo from "../../assets/images/hafizDiaries.jpeg";
 
-const Links = ["Home", "Vendors", "Profile"];
+const Links = ["Vendors", "Profile"];
 
 const stockLinks = ["Factory", "Cold storage", "Warehouse", "Shop"];
 // const Links = ["Vendors", "Profile"];

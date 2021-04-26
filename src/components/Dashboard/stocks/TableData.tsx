@@ -14,10 +14,10 @@ import {
   useToast,
   Checkbox,
   IconButton,
-  Tooltip,
+  Tooltip
 } from "@chakra-ui/react";
 import { FiEdit, FiDelete } from "react-icons/fi";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 
 export interface TableDataProps {
   checkedStockIds: any[];
@@ -61,6 +61,7 @@ const TableData: React.SFC<TableDataProps> = ({
           <Th>Quantity(kg)</Th>
           <Th>Price(per kg)</Th>
           <Th>Total Price</Th>
+          {type === "Factory" && <Th>Balance</Th>}
           {/* <Th>Storage</Th> */}
           <Th>Time ago</Th>
           <Th>Date</Th>
@@ -96,13 +97,22 @@ const TableData: React.SFC<TableDataProps> = ({
             {type === "Factory" && (
               <Td>{stock.vendor ? stock.vendor.name : ""}</Td>
             )}
-            <Td><Text isTruncated maxWidth={'10em'}>{stock.product ? stock.product.name : ""}</Text></Td>
+            <Td>
+              <Text isTruncated maxWidth={"10em"}>
+                {stock.product ? stock.product.name : ""}
+              </Text>
+            </Td>
             <Td>{stock.quantity}</Td>
             <Td>{stock.price}</Td>
             <Td>{(stock.price * stock.quantity)?.toFixed(2)}</Td>
+            {type === "Factory" && <Td>{stock.balance}</Td>}
             {/* <Td>{stock.type.split("Stock")[0]}</Td> */}
-            <Td><Moment toNow>{stock.created_at}</Moment></Td>
-            <Td><Moment format="DD/MM/YYYY">{stock.created_at}</Moment></Td>
+            <Td>
+              <Moment toNow>{stock.created_at}</Moment>
+            </Td>
+            <Td>
+              <Moment format="DD/MM/YYYY">{stock.created_at}</Moment>
+            </Td>
             <Td width="10px">
               <HStack spacing={3}>
                 <Tooltip

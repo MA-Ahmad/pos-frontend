@@ -4,6 +4,7 @@ type stock = {
     product: string;
     quantity: string;
     price: string;
+    balance: string;
   };
 
   type product = {
