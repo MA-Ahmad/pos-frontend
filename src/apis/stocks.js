@@ -1,8 +1,10 @@
 import axios from "axios";
 import { baseUrl } from "./baseUrl";
 
-const fetch = params =>
-  axios.get(`${baseUrl}api/v1/stocks?type=${params}Stock`);
+const fetch = (params, companyId) =>
+  axios.get(
+    `${baseUrl}api/v1/stocks?type=${params}Stock&company_id=${companyId}`
+  );
 
 const create = payload => axios.post(`${baseUrl}api/v1/stocks`, payload);
 

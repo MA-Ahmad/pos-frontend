@@ -32,6 +32,7 @@ import { FiEdit, FiDelete } from "react-icons/fi";
 import PageLoader from "../../Common/PageLoader";
 import Products from "../products/index";
 import vendorsApi from "../../../apis/vendors";
+import { useUserState } from '../../../contexts/user';
 
 export default function Vendors() {
   const [loading, setLoading] = React.useState(true);
@@ -40,6 +41,7 @@ export default function Vendors() {
   const bg = useColorModeValue("#f9f7f5", "gray.700");
   const toast = useToast();
   const [checkedVendorIds, setCheckedVendorIds] = React.useState([]);
+  const { user } = useUserState();
 
   React.useEffect(() => {
     fetchVendors();
@@ -48,7 +50,7 @@ export default function Vendors() {
   const fetchVendors = async () => {
     try {
       setLoading(true);
-      const response = await vendorsApi.fetch();
+      const response = await vendorsApi.fetch(user.company_id);
       setVendors(response.data);
     } catch (error) {
       console.log(error);
@@ -70,7 +72,8 @@ export default function Vendors() {
     try {
       const response = await vendorsApi.create({
         vendor: {
-          name: values.name
+          name: values.name,
+          company_id: user.company_id
         }
       });
       showToast("Vendor created successfully");
@@ -87,7 +90,8 @@ export default function Vendors() {
     try {
       await vendorsApi.update(id, {
         vendor: {
-          name: values.name
+          name: values.name,
+          company_id: user.company_id
         }
       });
       showToast("Vendor updated successfully");
@@ -157,7 +161,7 @@ export default function Vendors() {
                   enableReinitialize
                   initialValues={{ name: "" }}
                   validationSchema={Yup.object({
-                    name: Yup.string().required("Name is required")
+                    name: Yup.string().required("Name is required").matches(/^[aA-zZ\s]+$/, "Invalid name")
                   })}
                   onSubmit={(values, actions) => {
                     console.log(values);

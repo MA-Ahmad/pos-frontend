@@ -21,6 +21,8 @@ import { PageSlideFade } from "../../../animations/page-transitions";
 import PageLoader from "../../Common/PageLoader";
 import stocksApi from "../../../apis/stocks";
 import TableData from "./TableData";
+import { useUserState } from '../../../contexts/user';
+
 
 export default function Stocks({ type }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,6 +34,7 @@ export default function Stocks({ type }) {
   const [checkedStockIds, setCheckedStockIds] = React.useState([]);
   const [checkedItems, setCheckedItems] = React.useState([]);
   const allChecked = checkedItems.every(Boolean);
+  const { user } = useUserState();
 
   React.useEffect(() => {
     fetchStocks();
@@ -40,7 +43,7 @@ export default function Stocks({ type }) {
   const fetchStocks = async () => {
     try {
       setLoading(true);
-      const response = await stocksApi.fetch(type.split("_").join(""));
+      const response = await stocksApi.fetch(type.split("_").join(""), user.company_id);
       let checkedList = [];
       response.data.map(stock => checkedList.push(false));
       setCheckedItems(checkedList);
@@ -224,6 +227,7 @@ export default function Stocks({ type }) {
         handleStockCreate={handleStockCreate}
         handleStockUpdate={handleStockUpdate}
         refetch={fetchStocks}
+        companyId={user.company_id}
         type={type}
       />
     </PageSlideFade>

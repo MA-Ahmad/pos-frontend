@@ -38,6 +38,7 @@ export interface StockModalProps {
   handleStockUpdate?: (stock: stock) => void;
   refetch: () => void;
   type: string;
+  companyId: string;
 }
 
 const StockModal: React.SFC<StockModalProps> = ({
@@ -45,6 +46,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   onClose,
   selectedStock,
   type,
+  companyId,
   refetch
 }) => {
   const [initialValues, setInitialValues] = React.useState({
@@ -67,7 +69,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   const fetchVendors = async () => {
     try {
       setLoading(true);
-      const response = await vendorsApi.fetch();
+      const response = await vendorsApi.fetch(companyId);
       setVendors(response.data);
     } catch (error) {
       //   logger.error(error);
@@ -79,7 +81,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await productsApi.fetch();
+      const response = await productsApi.fetch(companyId);
       setProducts(response.data);
     } catch (error) {
       //   logger.error(error);
@@ -137,6 +139,7 @@ const StockModal: React.SFC<StockModalProps> = ({
         stock: {
           vendor_id: values?.vendor,
           product_id: values.product,
+          company_id: companyId,
           quantity: quantity,
           price: price,
           balance: balance,
@@ -157,6 +160,7 @@ const StockModal: React.SFC<StockModalProps> = ({
         stock: {
           vendor_id: values.vendor,
           product_id: values.product,
+          company_id: companyId,
           quantity: quantity,
           price: price,
           balance: balance

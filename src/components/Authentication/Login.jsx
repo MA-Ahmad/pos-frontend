@@ -53,8 +53,9 @@ const Login = ({ history }) => {
     try {
       setLoading(true);
       const {
-        data: { auth_token, user, is_admin },
+        data: { auth_token, user, is_admin, company_id },
       } = await authenticationApi.login({ user: { email, password } });
+      debugger
       authDispatch({ type: 'LOGIN', payload: { auth_token, email, is_admin } });
       userDispatch({ type: 'SET_USER', payload: { user } });
       setAuthHeaders();

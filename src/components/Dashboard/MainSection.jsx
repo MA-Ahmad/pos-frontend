@@ -57,7 +57,7 @@ export default function MainSection() {
             <Stack direction={{ base: 'column', md: 'row' }} spacing={4} justify="center">
               <Button
                 as={Link}
-                to="/stocks"
+                to="/stocks?type=Factory"
                 rounded={'full'}
                 bg={'blue.400'}
                 color={'white'}

@@ -27,6 +27,7 @@ import { AddIcon, DeleteIcon, Search2Icon } from "@chakra-ui/icons";
 import { FiEdit, FiDelete } from "react-icons/fi";
 import PageLoader from "../../Common/PageLoader";
 import productsApi from "../../../apis/products";
+import { useUserState } from '../../../contexts/user';
 
 export interface ProductsProps {}
 
@@ -37,6 +38,7 @@ const Products: React.SFC<ProductsProps> = () => {
   const bg = useColorModeValue("#f9f7f5", "gray.700");
   const toast = useToast();
   const [checkedProductIds, setCheckedProductIds] = React.useState([]);
+  const { user } = useUserState();
 
   React.useEffect(() => {
     fetchProducts();
@@ -45,7 +47,7 @@ const Products: React.SFC<ProductsProps> = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await productsApi.fetch();
+      const response = await productsApi.fetch(user.company_id);
       setProducts(response.data);
     } catch (error) {
       showToast("Something went wrong", "error");
@@ -66,7 +68,8 @@ const Products: React.SFC<ProductsProps> = () => {
     try {
       const response = await productsApi.create({
         product: {
-          name: values.name
+          name: values.name,
+          company_id: user.company_id,
         }
       });
 
@@ -82,7 +85,8 @@ const Products: React.SFC<ProductsProps> = () => {
     try {
       await productsApi.update(id, {
         product: {
-          name: values.name
+          name: values.name,
+          company_id: user.company_id
         }
       });
       showToast("Product updated successfully");
@@ -132,7 +136,7 @@ const Products: React.SFC<ProductsProps> = () => {
           enableReinitialize
           initialValues={{ name: "" }}
           validationSchema={Yup.object({
-            name: Yup.string().required("Name is required")
+            name: Yup.string().required("Name is required").matches(/^[aA-zZ\s]+$/, "Invalid name")
           })}
           onSubmit={(values, actions) => {
             console.log(values);

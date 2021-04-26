@@ -1,7 +1,8 @@
 import axios from "axios";
 import { baseUrl } from "./baseUrl";
 
-const fetch = () => axios.get(`${baseUrl}api/v1/vendors`);
+const fetch = companyId =>
+  axios.get(`${baseUrl}api/v1/vendors?company_id=${companyId}`);
 
 const create = payload => axios.post(`${baseUrl}api/v1/vendors`, payload);
 
