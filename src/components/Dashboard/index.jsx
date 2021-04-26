@@ -24,7 +24,7 @@ const Home = ({ history }) => {
     <PageSlideFade>
       <Flex width={'100%'} height={'100vh'} maxHeight={'100vh'}>
         <Navbar />
-        <Box width={'100%'} >
+        <Box width={'90%'} >
           <Switch>
             <Route exact path="/vendors" component={Vendors} />
             <Route exact path="/stocks" component={() => <Stocks type={query} />} />

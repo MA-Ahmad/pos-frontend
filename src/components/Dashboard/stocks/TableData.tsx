@@ -9,6 +9,7 @@ import {
   Th,
   Td,
   HStack,
+  Text,
   useColorModeValue,
   useToast,
   Checkbox,
@@ -95,7 +96,7 @@ const TableData: React.SFC<TableDataProps> = ({
             {type === "Factory" && (
               <Td>{stock.vendor ? stock.vendor.name : ""}</Td>
             )}
-            <Td>{stock.product ? stock.product.name : ""}</Td>
+            <Td><Text isTruncated maxWidth={'10em'}>{stock.product ? stock.product.name : ""}</Text></Td>
             <Td>{stock.quantity}</Td>
             <Td>{stock.price}</Td>
             <Td>{(stock.price * stock.quantity)?.toFixed(2)}</Td>

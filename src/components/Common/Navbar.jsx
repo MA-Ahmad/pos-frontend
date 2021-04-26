@@ -67,7 +67,7 @@ const Navbar = () => {
 
   return (
     <>
-      <VStack bg={useColorModeValue("gray.100", "gray.900")} p={4}>
+      <VStack bg={useColorModeValue("gray.100", "gray.900")} p={4} width={'10%'}>
         <Flex
           h={"100%"}
           alignItems={"center"}
@@ -164,7 +164,6 @@ const Navbar = () => {
             </Menu>
           </Flex>
         </Flex>
-
         {isOpen ? (
           <Box pb={4}>
             <VStack as={"nav"} spacing={4}>
