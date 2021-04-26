@@ -37,8 +37,6 @@ const InternalLink = ({ path, text }) => {
   );
 };
 
-const companyId = "d6273025-d2ff-4e3b-8240-17e3599f2281";
-
 const Signup = ({ history }) => {
   const [initialValues, setInitialValues] = useState({
     email: '',
@@ -69,7 +67,6 @@ const Signup = ({ history }) => {
           email,
           first_name: firstName,
           last_name: lastName,
-          company_id: companyId,
           password: password,
           password_confirmation: passwordConfirmation,
         },
