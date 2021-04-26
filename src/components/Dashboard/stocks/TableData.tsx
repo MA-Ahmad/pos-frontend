@@ -37,7 +37,7 @@ const TableData: React.SFC<TableDataProps> = ({
   const bg = useColorModeValue("#f9f7f5", "gray.700");
 
   return (
-    <Table variant="simple">
+    <Table variant="simple" size="sm">
       <Thead>
         <Tr>
           <Th width="10px">
