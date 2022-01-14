@@ -21,11 +21,14 @@ import {
   FormErrorMessage,
   Box,
   Stack,
-  useToast
+  useToast,
+  InputLeftElement,
+  InputGroup
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { products, vendors } from "../../../data/stocks-data";
+import { CalendarIcon } from "@chakra-ui/icons";
 import vendorsApi from "../../../apis/vendors";
 import productsApi from "../../../apis/products";
 import stocksApi from "../../../apis/stocks";
@@ -52,6 +55,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   const [initialValues, setInitialValues] = React.useState({
     vendor: "",
     product: "",
+    sku: "",
     quantity: "1.0",
     price: "100.0",
     balance: "0.0"
@@ -61,6 +65,7 @@ const StockModal: React.SFC<StockModalProps> = ({
   const [quantity, setQuantity] = React.useState("1.0");
   const [price, setPrice] = React.useState("100.0");
   const [balance, setBalance] = React.useState("0.0");
+  const [sku, setSku] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [vendors, setVendors] = React.useState([]);
   const [products, setProducts] = React.useState([]);
@@ -102,12 +107,14 @@ const StockModal: React.SFC<StockModalProps> = ({
         product: selectedStock.product.id,
         quantity: selectedStock.quantity,
         price: selectedStock.price,
-        balance: selectedStock.balance
+        balance: selectedStock.balance,
+        sku: selectedStock.sku
       };
       setInitialValues(stock);
       setQuantity(selectedStock.quantity);
       setPrice(selectedStock.price);
       setBalance(selectedStock.balance);
+      setSku(selectedStock.sku);
     } else {
       let stock: stock = {
         id: "",
@@ -115,16 +122,19 @@ const StockModal: React.SFC<StockModalProps> = ({
         product: "",
         quantity: "1.0",
         price: "100.0",
-        balance: "0.0"
+        balance: "0.0",
+        sku: ""
       };
       setInitialValues(stock);
       setQuantity("1.0");
       setPrice("100.0");
       setBalance("0.0");
+      setSku("");
     }
   }, [isOpen]);
 
   const handleSave = (values: stock) => {
+    console.log(values)
     if (selectedStock) {
       updateStock(selectedStock.id, values);
     } else {
@@ -140,6 +150,7 @@ const StockModal: React.SFC<StockModalProps> = ({
           vendor_id: values?.vendor,
           product_id: values.product,
           company_id: companyId,
+          sku: values.sku,
           quantity: quantity,
           price: price,
           balance: balance,
@@ -161,6 +172,7 @@ const StockModal: React.SFC<StockModalProps> = ({
           vendor_id: values.vendor,
           product_id: values.product,
           company_id: companyId,
+          sku: values.sku,
           quantity: quantity,
           price: price,
           balance: balance
@@ -188,7 +200,12 @@ const StockModal: React.SFC<StockModalProps> = ({
 
   const validationSchema = Yup.object({
     vendor: Yup.string().required("Vendor is required"),
-    product: Yup.string().required("Product is required")
+    product: Yup.string().required("Product is required"),
+  });
+
+  const prodSkuValidationSchema = Yup.object({
+    product: Yup.string().required("Product is required"),
+    sku: Yup.string().required("Sku is required")
   });
 
   return (
@@ -210,9 +227,9 @@ const StockModal: React.SFC<StockModalProps> = ({
           validationSchema={
             type === "Factory"
               ? validationSchema
-              : Yup.object({
-                  product: Yup.string().required("Product is required")
-                })
+              : type === "Shop" ? prodSkuValidationSchema : Yup.object({
+                product: Yup.string().required("Product is required"),
+              })
           }
           onSubmit={values => {
             console.log(values);
@@ -227,140 +244,168 @@ const StockModal: React.SFC<StockModalProps> = ({
             handleChange,
             handleSubmit,
             isSubmitting
-          }) => (
-            <Form>
-              <ModalBody pb={0} pt={0}>
-                <Stack>
-                  {type === "Factory" && (
+          }) => {
+            return (
+              <Form>
+                <ModalBody pb={0} pt={0}>
+                  <Stack>
+                    {type === "Factory" && (
+                      <Box>
+                        <Field name="vendor" width={"100%"}>
+                          {({ field, form }) => (
+                            <FormControl
+                              isInvalid={
+                                form.errors.vendor && form.touched.vendor
+                              }
+                            >
+                              <FormLabel htmlFor="vendor">Vendor</FormLabel>
+                              <Select
+                                {...field}
+                                id="vendor"
+                                placeholder="Select a vendor"
+                                value={values.vendor}
+                                onChange={handleChange}
+                              >
+                                {vendors.map(vendor => (
+                                  <option value={vendor.id} key={vendor.id}>
+                                    {vendor.name}
+                                  </option>
+                                ))}
+                              </Select>
+                              <FormErrorMessage mt={0}>
+                                {form.errors.vendor}
+                              </FormErrorMessage>
+                            </FormControl>
+                          )}
+                        </Field>
+                      </Box>
+                    )}
                     <Box>
-                      <Field name="vendor" width={"100%"}>
+                      <Field name="product" width={"100%"}>
                         {({ field, form }) => (
                           <FormControl
                             isInvalid={
-                              form.errors.vendor && form.touched.vendor
+                              form.errors.product && form.touched.product
                             }
                           >
-                            <FormLabel htmlFor="vendor">Vendor</FormLabel>
+                            <FormLabel htmlFor="product">product</FormLabel>
                             <Select
                               {...field}
-                              id="vendor"
-                              placeholder="Select a vendor"
-                              value={values.vendor}
+                              id="product"
+                              placeholder="Select a product"
+                              value={values.product}
                               onChange={handleChange}
                             >
-                              {vendors.map(vendor => (
-                                <option value={vendor.id} key={vendor.id}>
-                                  {vendor.name}
+                              {products.map(product => (
+                                <option value={product.id} key={product.id}>
+                                  {product.name}
                                 </option>
                               ))}
                             </Select>
                             <FormErrorMessage mt={0}>
-                              {form.errors.vendor}
+                              {form.errors.product}
                             </FormErrorMessage>
                           </FormControl>
+
                         )}
                       </Field>
                     </Box>
-                  )}
-                  <Box>
-                    <Field name="product" width={"100%"}>
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={
-                            form.errors.product && form.touched.product
-                          }
+                    {type === "Shop" && (
+                      <Box>
+                        <Field name="sku" width={"100%"}>
+                          {({ field, form }) => (
+                            <FormControl
+                              isInvalid={
+                                form.errors.sku && form.touched.sku
+                              }
+                            >
+                              <FormLabel htmlFor="sku">Sku</FormLabel>
+                              <InputGroup>
+                                <InputLeftElement
+                                  pointerEvents='none'
+                                  children={<CalendarIcon color='gray.300' />}
+                                />
+                                <Input {...field} id='sku' placeholder='SH456' />
+                              </InputGroup>
+                              <FormErrorMessage mt={0}>
+                                {form.errors.sku}
+                              </FormErrorMessage>
+                            </FormControl>
+                          )}
+                        </Field>
+                      </Box>
+                    )}
+                    <Box>
+                      <FormControl>
+                        <FormLabel>Quantity(kg)</FormLabel>
+                        <NumberInput
+                          min={1}
+                          max={10000}
+                          defaultValue={quantity}
+                          clampValueOnBlur={false}
+                          step={0.2}
+                          onChange={value => setQuantity(value)}
                         >
-                          <FormLabel htmlFor="product">product</FormLabel>
-                          <Select
-                            {...field}
-                            id="product"
-                            placeholder="Select a product"
-                            value={values.product}
-                            onChange={handleChange}
-                          >
-                            {products.map(product => (
-                              <option value={product.id} key={product.id}>
-                                {product.name}
-                              </option>
-                            ))}
-                          </Select>
-                          <FormErrorMessage mt={0}>
-                            {form.errors.product}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                  </Box>
-                  <Box>
-                    <FormControl>
-                      <FormLabel>Quantity(kg)</FormLabel>
-                      <NumberInput
-                        min={1}
-                        max={10000}
-                        defaultValue={quantity}
-                        clampValueOnBlur={false}
-                        step={0.2}
-                        onChange={value => setQuantity(value)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl>
-                      <FormLabel>Price(kg)</FormLabel>
-                      <NumberInput
-                        min={1}
-                        max={10000}
-                        defaultValue={price}
-                        clampValueOnBlur={false}
-                        step={0.2}
-                        onChange={value => setPrice(value)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl>
-                      <FormLabel>Balance</FormLabel>
-                      <NumberInput
-                        min={1}
-                        max={10000}
-                        defaultValue={balance}
-                        clampValueOnBlur={false}
-                        step={0.2}
-                        onChange={value => setBalance(value)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </FormControl>
-                  </Box>
-                </Stack>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  isLoading={isSubmitting}
-                  colorScheme="blue"
-                  type="submit"
-                >
-                  {selectedStock ? "Update" : "Create"}
-                </Button>
-              </ModalFooter>
-            </Form>
-          )}
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl>
+                        <FormLabel>Price(kg)</FormLabel>
+                        <NumberInput
+                          min={1}
+                          max={10000}
+                          defaultValue={price}
+                          clampValueOnBlur={false}
+                          step={0.2}
+                          onChange={value => setPrice(value)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl>
+                        <FormLabel>Balance</FormLabel>
+                        <NumberInput
+                          min={1}
+                          max={10000}
+                          defaultValue={balance}
+                          clampValueOnBlur={false}
+                          step={0.2}
+                          onChange={value => setBalance(value)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      </FormControl>
+                    </Box>
+                  </Stack>
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    isLoading={isSubmitting}
+                    colorScheme="blue"
+                    type="submit"
+                  >
+                    {selectedStock ? "Update" : "Create"}
+                  </Button>
+                </ModalFooter>
+              </Form>
+            )
+          }}
         </Formik>
       </ModalContent>
     </Modal>

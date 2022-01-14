@@ -8,6 +8,7 @@ import Profile from "./Account/Profile";
 import AccountEdit from "./Account/AccountEdit";
 import { PageSlideFade } from "../../animations/page-transitions";
 import Vendors from "./vendors/index";
+import Inventory from "./Inventory/index";
 
 const useQuery = () => {
   let obj = new URL(window.location.href)
@@ -27,6 +28,7 @@ const Home = ({ history }) => {
         <Box width={'90%'} >
           <Switch>
             <Route exact path="/vendors" component={Vendors} />
+            <Route exact path="/inventory" component={Inventory} />
             <Route exact path="/stocks" component={() => <Stocks type={query} />} />
             <Route exact path="/home" component={MainSection} />
             <Route exact path="/account/edit" component={AccountEdit} />

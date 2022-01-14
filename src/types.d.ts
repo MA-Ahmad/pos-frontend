@@ -2,6 +2,7 @@ type stock = {
     id: string;
     vendor: string;
     product: string;
+    sku: string;
     quantity: string;
     price: string;
     balance: string;
