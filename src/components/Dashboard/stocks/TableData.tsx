@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   Stack,
   Box,
@@ -14,17 +14,17 @@ import {
   useToast,
   Checkbox,
   IconButton,
-  Tooltip
-} from "@chakra-ui/react";
-import { FiEdit, FiDelete } from "react-icons/fi";
-import Moment from "react-moment";
+  Tooltip,
+} from '@chakra-ui/react'
+import { FiEdit, FiDelete } from 'react-icons/fi'
+import Moment from 'react-moment'
 
 export interface TableDataProps {
-  checkedStockIds: any[];
-  setCheckedStockIds: React.Dispatch<React.SetStateAction<any[]>>;
-  stockList: stock[];
-  handleClick: (id: string) => void;
-  type: string;
+  checkedStockIds: any[]
+  setCheckedStockIds: React.Dispatch<React.SetStateAction<any[]>>
+  stockList: stock[]
+  handleClick: (id: string) => void
+  type: string
 }
 
 const TableData: React.SFC<TableDataProps> = ({
@@ -32,9 +32,9 @@ const TableData: React.SFC<TableDataProps> = ({
   setCheckedStockIds,
   stockList,
   handleClick,
-  type
+  type,
 }) => {
-  const bg = useColorModeValue("#f9f7f5", "gray.700");
+  const bg = useColorModeValue('#f9f7f5', 'gray.700')
 
   return (
     <Table variant="simple" size="sm">
@@ -44,25 +44,26 @@ const TableData: React.SFC<TableDataProps> = ({
             <Checkbox
               isChecked={
                 checkedStockIds.length ===
-                stockList.map(stock => stock.id).length
+                stockList.map((stock) => stock.id).length
               }
               onChange={() => {
-                const stockIds = stockList.map(stock => stock.id);
+                const stockIds = stockList.map((stock) => stock.id)
                 if (checkedStockIds.length === stockIds.length) {
-                  setCheckedStockIds([]);
+                  setCheckedStockIds([])
                 } else {
-                  setCheckedStockIds(stockIds);
+                  setCheckedStockIds(stockIds)
                 }
               }}
             ></Checkbox>
           </Th>
-          {type === "Factory" && <Th>Vendor</Th>}
+          {type === 'Factory' && <Th>Vendor</Th>}
           <Th>Product</Th>
           <Th>Quantity(kg)</Th>
           <Th>Price(per kg)</Th>
           <Th>Total Price</Th>
-          {type === "Factory" && <Th>Balance</Th>}
+          {type === 'Factory' && <Th>Balance</Th>}
           {/* <Th>Storage</Th> */}
+          <Th>Category</Th>
           <Th>Time ago</Th>
           <Th>Date</Th>
           <Th width="10px"></Th>
@@ -79,34 +80,34 @@ const TableData: React.SFC<TableDataProps> = ({
             <Td width="10px">
               <Checkbox
                 isChecked={checkedStockIds.includes(stock.id)}
-                onChange={event => {
-                  event.stopPropagation();
-                  const index = checkedStockIds.indexOf(stock.id);
+                onChange={(event) => {
+                  event.stopPropagation()
+                  const index = checkedStockIds.indexOf(stock.id)
 
                   if (index > -1) {
                     setCheckedStockIds([
                       ...checkedStockIds.slice(0, index),
-                      ...checkedStockIds.slice(index + 1)
-                    ]);
+                      ...checkedStockIds.slice(index + 1),
+                    ])
                   } else {
-                    setCheckedStockIds([...checkedStockIds, stock.id]);
+                    setCheckedStockIds([...checkedStockIds, stock.id])
                   }
                 }}
               ></Checkbox>
             </Td>
-            {type === "Factory" && (
-              <Td>{stock.vendor ? stock.vendor.name : ""}</Td>
+            {type === 'Factory' && (
+              <Td>{stock.vendor ? stock.vendor.name : ''}</Td>
             )}
             <Td>
-              <Text isTruncated maxWidth={"10em"}>
-                {stock.product ? stock.product.name : ""}
+              <Text isTruncated maxWidth={'10em'}>
+                {stock.product ? stock.product.name : ''}
               </Text>
             </Td>
             <Td>{stock.quantity}</Td>
             <Td>{stock.price}</Td>
             <Td>{(stock.price * stock.quantity)?.toFixed(2)}</Td>
-            {type === "Factory" && <Td>{stock.balance}</Td>}
-            {/* <Td>{stock.type.split("Stock")[0]}</Td> */}
+            {type === 'Factory' && <Td>{stock.balance}</Td>}
+            <Td>{stock.type.split('Stock')[0]}</Td>
             <Td>
               <Moment toNow>{stock.created_at}</Moment>
             </Td>
@@ -137,7 +138,7 @@ const TableData: React.SFC<TableDataProps> = ({
         ))}
       </Tbody>
     </Table>
-  );
-};
+  )
+}
 
-export default TableData;
+export default TableData

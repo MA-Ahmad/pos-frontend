@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   Button,
   ModalContent,
@@ -12,6 +12,7 @@ import {
   FormLabel,
   Input,
   Textarea,
+  Flex,
   Select,
   NumberInput,
   NumberInputField,
@@ -23,25 +24,25 @@ import {
   Stack,
   useToast,
   InputLeftElement,
-  InputGroup
-} from "@chakra-ui/react";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import { products, vendors } from "../../../data/stocks-data";
-import { CalendarIcon } from "@chakra-ui/icons";
-import vendorsApi from "../../../apis/vendors";
-import productsApi from "../../../apis/products";
-import stocksApi from "../../../apis/stocks";
+  InputGroup,
+} from '@chakra-ui/react'
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
+import { products, vendors } from '../../../data/stocks-data'
+import { CalendarIcon } from '@chakra-ui/icons'
+import vendorsApi from '../../../apis/vendors'
+import productsApi from '../../../apis/products'
+import stocksApi from '../../../apis/stocks'
 
 export interface StockModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedStock?: stock;
-  handleStockCreate?: (stock: stock) => void;
-  handleStockUpdate?: (stock: stock) => void;
-  refetch: () => void;
-  type: string;
-  companyId: string;
+  isOpen: boolean
+  onClose: () => void
+  selectedStock?: stock
+  handleStockCreate?: (stock: stock) => void
+  handleStockUpdate?: (stock: stock) => void
+  refetch: () => void
+  type: string
+  companyId: string
 }
 
 const StockModal: React.SFC<StockModalProps> = ({
@@ -50,57 +51,59 @@ const StockModal: React.SFC<StockModalProps> = ({
   selectedStock,
   type,
   companyId,
-  refetch
+  refetch,
 }) => {
   const [initialValues, setInitialValues] = React.useState({
-    vendor: "",
-    product: "",
-    sku: "",
-    quantity: "1.0",
-    price: "100.0",
-    balance: "0.0"
-  });
-  const vendorRef = React.useRef<HTMLInputElement>(null);
-  const productRef = React.useRef<HTMLInputElement>(null);
-  const [quantity, setQuantity] = React.useState("1.0");
-  const [price, setPrice] = React.useState("100.0");
-  const [balance, setBalance] = React.useState("0.0");
-  const [sku, setSku] = React.useState("");
-  const [loading, setLoading] = React.useState(true);
-  const [vendors, setVendors] = React.useState([]);
-  const [products, setProducts] = React.useState([]);
-  const toast = useToast();
+    vendor: '',
+    product: '',
+    sku: '',
+    quantity: '1.0',
+    price: '100.0',
+    balance: '0.0',
+    paidAmount: '0.0',
+  })
+  const vendorRef = React.useRef<HTMLInputElement>(null)
+  const productRef = React.useRef<HTMLInputElement>(null)
+  const [quantity, setQuantity] = React.useState('1.0')
+  const [price, setPrice] = React.useState('100.0')
+  const [balance, setBalance] = React.useState('0.0')
+  const [paidAmount, setPaidAmount] = React.useState('0.0')
+  const [sku, setSku] = React.useState('')
+  const [loading, setLoading] = React.useState(true)
+  const [vendors, setVendors] = React.useState([])
+  const [products, setProducts] = React.useState([])
+  const toast = useToast()
 
   const fetchVendors = async () => {
     try {
-      setLoading(true);
-      const response = await vendorsApi.fetch(companyId);
-      setVendors(response.data);
+      setLoading(true)
+      const response = await vendorsApi.fetch(companyId)
+      setVendors(response.data)
     } catch (error) {
       //   logger.error(error);
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const fetchProducts = async () => {
     try {
-      setLoading(true);
-      const response = await productsApi.fetch(companyId);
-      setProducts(response.data);
+      setLoading(true)
+      const response = await productsApi.fetch(companyId)
+      setProducts(response.data)
     } catch (error) {
       //   logger.error(error);
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   React.useEffect(() => {
-    if (!vendors.length) fetchVendors();
-    if (!products.length) fetchProducts();
+    if (!vendors.length) fetchVendors()
+    if (!products.length) fetchProducts()
 
     if (selectedStock) {
-      console.log(selectedStock);
+      console.log(selectedStock)
       let stock: stock = {
         id: selectedStock.id,
         vendor: selectedStock.vendor?.id,
@@ -108,42 +111,46 @@ const StockModal: React.SFC<StockModalProps> = ({
         quantity: selectedStock.quantity,
         price: selectedStock.price,
         balance: selectedStock.balance,
-        sku: selectedStock.sku
-      };
-      setInitialValues(stock);
-      setQuantity(selectedStock.quantity);
-      setPrice(selectedStock.price);
-      setBalance(selectedStock.balance);
-      setSku(selectedStock.sku);
+        paidAmount: selectedStock.paid_amount,
+        sku: selectedStock.sku,
+      }
+      setInitialValues(stock)
+      setQuantity(selectedStock.quantity)
+      setPrice(selectedStock.price)
+      setBalance(selectedStock.balance)
+      setPaidAmount(selectedStock.paid_amount)
+      setSku(selectedStock.sku)
     } else {
       let stock: stock = {
-        id: "",
-        vendor: "",
-        product: "",
-        quantity: "1.0",
-        price: "100.0",
-        balance: "0.0",
-        sku: ""
-      };
-      setInitialValues(stock);
-      setQuantity("1.0");
-      setPrice("100.0");
-      setBalance("0.0");
-      setSku("");
+        id: '',
+        vendor: '',
+        product: '',
+        quantity: '1.0',
+        price: '100.0',
+        balance: '0.0',
+        paidAmount: '0.0',
+        sku: '',
+      }
+      setInitialValues(stock)
+      setQuantity('1.0')
+      setPrice('100.0')
+      setBalance('0.0')
+      setPaidAmount('0.0')
+      setSku('')
     }
-  }, [isOpen]);
+  }, [isOpen])
 
   const handleSave = (values: stock) => {
     console.log(values)
     if (selectedStock) {
-      updateStock(selectedStock.id, values);
+      updateStock(selectedStock.id, values)
     } else {
-      createStock(values);
+      createStock(values)
     }
-    onClose();
-  };
+    onClose()
+  }
 
-  const createStock = async values => {
+  const createStock = async (values) => {
     try {
       const response = await stocksApi.create({
         stock: {
@@ -153,17 +160,18 @@ const StockModal: React.SFC<StockModalProps> = ({
           sku: values.sku,
           quantity: quantity,
           price: price,
-          balance: balance,
-          type: `${type.split("_").join("")}Stock`
-        }
-      });
-      refetch();
-      showToast("Stock created successfully");
-      onClose();
+          balance: parseFloat(quantity * price) - parseFloat(paidAmount),
+          paid_amount: paidAmount,
+          type: `${type.split('_').join('')}Stock`,
+        },
+      })
+      refetch()
+      showToast('Stock created successfully')
+      onClose()
     } catch (err) {
-      showToast("Not enough stock available", "error");
+      showToast('Not enough stock available', 'error')
     }
-  };
+  }
 
   const updateStock = async (id, values) => {
     try {
@@ -175,38 +183,39 @@ const StockModal: React.SFC<StockModalProps> = ({
           sku: values.sku,
           quantity: quantity,
           price: price,
-          balance: balance
-        }
-      });
-      refetch();
-      showToast("Stock updated successfully");
-      onClose();
+          balance: parseFloat(quantity * price) - parseFloat(paidAmount),
+          paid_amount: paidAmount,
+        },
+      })
+      refetch()
+      showToast('Stock updated successfully')
+      onClose()
     } catch (err) {
-      showToast("Not enough stock available", "error");
+      showToast('Not enough stock available', 'error')
     }
     // finally {
     //   showToast("Stock updated successfully");
     // }
-  };
+  }
 
-  const showToast = (text, type = "success") => {
+  const showToast = (text, type = 'success') => {
     toast({
       description: text,
       status: type,
       duration: 1500,
-      isClosable: true
-    });
-  };
+      isClosable: true,
+    })
+  }
 
   const validationSchema = Yup.object({
-    vendor: Yup.string().required("Vendor is required"),
-    product: Yup.string().required("Product is required"),
-  });
+    vendor: Yup.string().required('Vendor is required'),
+    product: Yup.string().required('Product is required'),
+  })
 
   const prodSkuValidationSchema = Yup.object({
-    product: Yup.string().required("Product is required"),
-    sku: Yup.string().required("Sku is required")
-  });
+    product: Yup.string().required('Product is required'),
+    sku: Yup.string().required('Sku is required'),
+  })
 
   return (
     <Modal
@@ -219,21 +228,23 @@ const StockModal: React.SFC<StockModalProps> = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{selectedStock ? "Edit" : "Create"} a Stock</ModalHeader>
+        <ModalHeader>{selectedStock ? 'Edit' : 'Create'} a Stock</ModalHeader>
         <ModalCloseButton />
         <Formik
           enableReinitialize
           initialValues={initialValues}
           validationSchema={
-            type === "Factory"
+            type === 'Factory'
               ? validationSchema
-              : type === "Shop" ? prodSkuValidationSchema : Yup.object({
-                product: Yup.string().required("Product is required"),
-              })
+              : type === 'Shop'
+              ? prodSkuValidationSchema
+              : Yup.object({
+                  product: Yup.string().required('Product is required'),
+                })
           }
-          onSubmit={values => {
-            console.log(values);
-            handleSave(values);
+          onSubmit={(values) => {
+            console.log(values)
+            handleSave(values)
             // handleSubmit(values);
           }}
         >
@@ -243,15 +254,15 @@ const StockModal: React.SFC<StockModalProps> = ({
             values,
             handleChange,
             handleSubmit,
-            isSubmitting
+            isSubmitting,
           }) => {
             return (
               <Form>
                 <ModalBody pb={0} pt={0}>
                   <Stack>
-                    {type === "Factory" && (
+                    {type === 'Factory' && (
                       <Box>
-                        <Field name="vendor" width={"100%"}>
+                        <Field name="vendor" width={'100%'}>
                           {({ field, form }) => (
                             <FormControl
                               isInvalid={
@@ -266,7 +277,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                                 value={values.vendor}
                                 onChange={handleChange}
                               >
-                                {vendors.map(vendor => (
+                                {vendors.map((vendor) => (
                                   <option value={vendor.id} key={vendor.id}>
                                     {vendor.name}
                                   </option>
@@ -281,7 +292,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                       </Box>
                     )}
                     <Box>
-                      <Field name="product" width={"100%"}>
+                      <Field name="product" width={'100%'}>
                         {({ field, form }) => (
                           <FormControl
                             isInvalid={
@@ -296,7 +307,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                               value={values.product}
                               onChange={handleChange}
                             >
-                              {products.map(product => (
+                              {products.map((product) => (
                                 <option value={product.id} key={product.id}>
                                   {product.name}
                                 </option>
@@ -306,26 +317,27 @@ const StockModal: React.SFC<StockModalProps> = ({
                               {form.errors.product}
                             </FormErrorMessage>
                           </FormControl>
-
                         )}
                       </Field>
                     </Box>
-                    {type === "Shop" && (
+                    {type === 'Shop' && (
                       <Box>
-                        <Field name="sku" width={"100%"}>
+                        <Field name="sku" width={'100%'}>
                           {({ field, form }) => (
                             <FormControl
-                              isInvalid={
-                                form.errors.sku && form.touched.sku
-                              }
+                              isInvalid={form.errors.sku && form.touched.sku}
                             >
                               <FormLabel htmlFor="sku">Sku</FormLabel>
                               <InputGroup>
                                 <InputLeftElement
-                                  pointerEvents='none'
-                                  children={<CalendarIcon color='gray.300' />}
+                                  pointerEvents="none"
+                                  children={<CalendarIcon color="gray.300" />}
                                 />
-                                <Input {...field} id='sku' placeholder='SH456' />
+                                <Input
+                                  {...field}
+                                  id="sku"
+                                  placeholder="SH456"
+                                />
                               </InputGroup>
                               <FormErrorMessage mt={0}>
                                 {form.errors.sku}
@@ -344,7 +356,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                           defaultValue={quantity}
                           clampValueOnBlur={false}
                           step={0.2}
-                          onChange={value => setQuantity(value)}
+                          onChange={(value) => setQuantity(value)}
                         >
                           <NumberInputField />
                           <NumberInputStepper>
@@ -363,7 +375,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                           defaultValue={price}
                           clampValueOnBlur={false}
                           step={0.2}
-                          onChange={value => setPrice(value)}
+                          onChange={(value) => setPrice(value)}
                         >
                           <NumberInputField />
                           <NumberInputStepper>
@@ -375,14 +387,14 @@ const StockModal: React.SFC<StockModalProps> = ({
                     </Box>
                     <Box>
                       <FormControl>
-                        <FormLabel>Balance</FormLabel>
+                        <FormLabel>Paid Amount</FormLabel>
                         <NumberInput
                           min={1}
                           max={10000}
-                          defaultValue={balance}
+                          defaultValue={paidAmount}
                           clampValueOnBlur={false}
                           step={0.2}
-                          onChange={value => setBalance(value)}
+                          onChange={(value) => setPaidAmount(value)}
                         >
                           <NumberInputField />
                           <NumberInputStepper>
@@ -390,6 +402,25 @@ const StockModal: React.SFC<StockModalProps> = ({
                             <NumberDecrementStepper />
                           </NumberInputStepper>
                         </NumberInput>
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl>
+                        <Flex>
+                          <FormLabel>Total Amount</FormLabel>
+                          {parseFloat(quantity * price).toFixed(2)}
+                        </Flex>
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl>
+                        <Flex>
+                          <FormLabel>Remaninig Balance</FormLabel>
+                          {(
+                            parseFloat(quantity * price) -
+                            parseFloat(paidAmount)
+                          ).toFixed(2)}
+                        </Flex>
                       </FormControl>
                     </Box>
                   </Stack>
@@ -400,7 +431,7 @@ const StockModal: React.SFC<StockModalProps> = ({
                     colorScheme="blue"
                     type="submit"
                   >
-                    {selectedStock ? "Update" : "Create"}
+                    {selectedStock ? 'Update' : 'Create'}
                   </Button>
                 </ModalFooter>
               </Form>
@@ -409,7 +440,7 @@ const StockModal: React.SFC<StockModalProps> = ({
         </Formik>
       </ModalContent>
     </Modal>
-  );
-};
+  )
+}
 
-export default StockModal;
+export default StockModal
