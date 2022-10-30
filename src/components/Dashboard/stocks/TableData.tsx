@@ -106,7 +106,15 @@ const TableData: React.SFC<TableDataProps> = ({
             <Td>{stock.quantity}</Td>
             <Td>{stock.price}</Td>
             <Td>{(stock.price * stock.quantity)?.toFixed(2)}</Td>
-            {type === 'Factory' && <Td>{stock.balance}</Td>}
+            {/* {type === 'Factory' && <Td>{stock.balance}</Td>} */}
+            {type === 'Factory' && (
+              <Td>
+                {(
+                  parseFloat(stock.price * stock.quantity) -
+                  parseFloat(stock.paid_amount)
+                ).toFixed(2)}
+              </Td>
+            )}
             <Td>{stock.type.split('Stock')[0]}</Td>
             <Td>
               <Moment toNow>{stock.created_at}</Moment>
